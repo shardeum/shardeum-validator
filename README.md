@@ -49,7 +49,7 @@ docker run \
 These are the environment variables used by the validator:
 
 ```bash
-APP_MONITOR RPC_SERVER_URL EXISTING_ARCHIVERS NEXT_PUBLIC_RPC_URL NEXT_EXPLORER_URL INT_IP SHMINT SHMEXT DASHPORT RUNDASHBOARD EXT_IP SERVERIP
+APP_MONITOR RPC_SERVER_URL EXISTING_ARCHIVERS NEXT_PUBLIC_RPC_URL NEXT_EXPLORER_URL INT_IP SHMINT SHMEXT DASHPORT RUNDASHBOARD EXT_IP SERVERIP LOCALLANIP
 ```
 
 So you could, for example, run the validator without starting the dashboard by specifying `-e RUNDASHBOARD=n` in the docker run command.

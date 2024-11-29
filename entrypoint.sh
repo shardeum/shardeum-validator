@@ -17,6 +17,23 @@ DASHPORT=${DASHPORT:-8080}
 RUNDASHBOARD=${RUNDASHBOARD:-"y"}
 
 
+get_ip() {
+  local ip
+  if command -v ip >/dev/null; then
+    ip=$(ip addr show $(ip route | awk '/default/ {print $5}') | awk '/inet/ {print $2}' | cut -d/ -f1 | head -n1)
+  elif command -v netstat >/dev/null; then
+    # Get the default route interface
+    interface=$(netstat -rn | awk '/default/{print $4}' | head -n1)
+    # Get the IP address for the default interface
+    ip=$(ifconfig "$interface" | awk '/inet /{print $2}')
+  else
+    echo "Error: neither 'ip' nor 'ifconfig' command found. Submit a bug for your OS."
+    return 1
+  fi
+  echo $ip
+}
+
+
 get_external_ip() {
   external_ip=''
   external_ip=$(curl -s https://api.ipify.org)
@@ -49,6 +66,9 @@ if [ -z "$EXT_IP" ]; then
     EXT_IP=$(get_external_ip)
 fi
 SERVERIP=$EXT_IP
+if [ -z "$LOCALLANIP" ]; then
+    LOCALLANIP=$(get_ip)
+fi
 
 ## Make variables available to the CLI app which uses them to start the validator
 export APP_MONITOR RPC_SERVER_URL EXISTING_ARCHIVERS NEXT_PUBLIC_RPC_URL NEXT_EXPLORER_URL INT_IP SHMEXT SHMINT DASHPORT RUNDASHBOARD EXT_IP SERVERIP
@@ -77,16 +97,62 @@ for VAR in "${ENV_VARS[@]}"; do
   # Check if the variable is already in the profile
   if ! grep -q "^export $VAR=" "$PROFILE_FILE"; then
     # Add the variable to ~/.profile
-    echo "export $VAR=\${$VAR}" >> "$PROFILE_FILE"
+    echo -e "\nexport $VAR=\${$VAR}" >> "$PROFILE_FILE\n"
   fi
 done
 
 ## Ensure the certificates for the GUI exist in the config directory
-cd /usr/home/config
+cd /home/node/config
 if [ ! -f "CA.cnf" ]; then
     echo "Creating certificates"
-    # Redirect stdout to /dev/null to avoid printing the openssl cruft, but show stderr errors as they could be useful for debugging
-    ./create-certificates.sh > /dev/null
+
+    echo "[ req ]
+prompt = no
+distinguished_name = req_distinguished_name
+
+[ req_distinguished_name ]
+C = XX
+ST = Localzone
+L = localhost
+O = Certificate Authority Local Validator Node
+OU = Develop
+CN = mynode-atomium.sharedum.local
+emailAddress = community@.sharedum.local" > CA.cnf
+
+    openssl req -nodes -new -x509 -keyout CA_key.pem -out CA_cert.pem -days 1825 -config CA.cnf > /dev/null
+
+echo "[ req ]
+default_bits  = 4096
+distinguished_name = req_distinguished_name
+req_extensions = req_ext
+x509_extensions = v3_req
+prompt = no
+
+[req_distinguished_name]
+countryName = XX
+stateOrProvinceName = Localzone
+localityName = Localhost
+organizationName = Shardeum Atomium 1.x Validator Cert.
+commonName = localhost
+
+[req_ext]
+subjectAltName = @alt_names
+
+[v3_req]
+subjectAltName = @alt_names
+
+[alt_names]
+IP.1 = $SERVERIP
+IP.2 = $LOCALLANIP
+DNS.1 = localhost" > selfsigned.cnf
+
+    openssl req -sha256 -nodes -newkey rsa:4096 -keyout selfsigned.key -out selfsigned.csr -config selfsigned.cnf > /dev/null
+
+    openssl x509 -req -days 398 -in selfsigned.csr -CA CA_cert.pem -CAkey CA_key.pem -CAcreateserial -out selfsigned_node.crt -extensions req_ext -extfile selfsigned.cnf > /dev/null
+
+    cat selfsigned_node.crt CA_cert.pem > selfsigned.crt
+
+    popd
 fi
 
 ## Start the GUI if enabled

@@ -89,10 +89,10 @@ COPY --from=validator --chown=node:node /usr/src/app /usr/src/app
 COPY --from=cli --chown=node:node /home/node/app/cli /home/node/app/cli
 COPY --from=gui --chown=node:node /home/node/app/gui /home/node/app/gui
 COPY --chown=node:node entrypoint.sh /home/node/app/
-COPY --chown=node:node scripts/*.sh /home/node/app/config/
+COPY --chown=node:node scripts/operator-cli.sh scripts/set-password.sh scripts/shell.sh /home/node/config/
 
 ## Map the GUIs certificates to the config directory, these will be broken links until the first time entry.sh is run & they'e auto-generated
-RUN cd /home/node/app && \
+RUN cd /home/node/app/gui && \
     ln -s /home/node/config/CA.cnf && \
     ln -s /home/node/config/CA_cert.pem && \
     ln -s /home/node/config/CA_cert.srl && \
