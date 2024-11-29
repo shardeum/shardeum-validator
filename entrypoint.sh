@@ -102,8 +102,10 @@ for VAR in "${ENV_VARS[@]}"; do
 done
 
 ## Ensure the certificates for the GUI exist in the config directory
-cd /home/node/config
-if [ ! -f "CA.cnf" ]; then
+
+
+if [ ! -f "/home/node/config/CA.cnf" ]; then
+    cd /home/node/config
     echo "Creating certificates"
 
     echo "[ req ]
@@ -152,7 +154,6 @@ DNS.1 = localhost" > selfsigned.cnf
 
     cat selfsigned_node.crt CA_cert.pem > selfsigned.crt
 
-    popd
 fi
 
 ## Start the GUI if enabled

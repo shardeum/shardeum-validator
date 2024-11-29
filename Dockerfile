@@ -79,7 +79,7 @@ FROM node:${NODE_VERSION} AS final
 LABEL "org.opencontainers.image.source"="https://github.com/shardeum/shardeum-validator"
 
 RUN apt-get update
-RUN apt-get install -y sudo logrotate
+RUN apt-get install -y sudo logrotate iproute2
 
 RUN mkdir -p           /home/node/app /home/node/config /usr/src/app && \
     chown -R node:node /home/node/app /home/node/config /usr/src/app && \
@@ -99,6 +99,7 @@ RUN cd /home/node/app/gui && \
     ln -s /home/node/config/CA_key.pem && \
     ln -s /home/node/config/selfsigned.cnf && \
     ln -s /home/node/config/selfsigned.csr && \
+    ln -s /home/node/config/selfsigned.key && \
     ln -s /home/node/config/selfsigned_node.crt && \
     ln -s /home/node/config/selfsigned.crt
 
