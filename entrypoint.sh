@@ -52,6 +52,34 @@ SERVERIP=$EXT_IP
 ## Make variables available to the CLI app which uses them to start the validator
 export APP_MONITOR RPC_SERVER_URL EXISTING_ARCHIVERS NEXT_PUBLIC_RPC_URL NEXT_EXPLORER_URL INT_IP SHMEXT SHMINT DASHPORT RUNDASHBOARD EXT_IP SERVERIP
 
+## Ensure that the env variables are set for the node user on any shell session
+ENV_VARS=(
+  "APP_MONITOR"
+  "RPC_SERVER_URL"
+  "EXISTING_ARCHIVERS"
+  "NEXT_PUBLIC_RPC_URL"
+  "NEXT_EXPLORER_URL"
+  "INT_IP"
+  "SHMEXT"
+  "SHMINT"
+  "DASHPORT"
+  "RUNDASHBOARD"
+  "EXT_IP"
+  "SERVERIP"
+)
+
+# Path to the profile file
+PROFILE_FILE="$HOME/.profile"
+
+# Loop through each variable and append it to ~/.profile if not already present
+for VAR in "${ENV_VARS[@]}"; do
+  # Check if the variable is already in the profile
+  if ! grep -q "^export $VAR=" "$PROFILE_FILE"; then
+    # Add the variable to ~/.profile
+    echo "export $VAR=\${$VAR}" >> "$PROFILE_FILE"
+  fi
+done
+
 ## Ensure the certificates for the GUI exist in the config directory
 cd /usr/home/config
 if [ ! -f "CA.cnf" ]; then

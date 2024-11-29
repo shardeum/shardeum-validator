@@ -25,7 +25,7 @@ cd ~/shardeum
 
 
 ## Important
-You'll have to open these ports on your firewall to allow incoming connections to the validator and/or redirect these ports to your machine on your home router.
+You'll have to open the ports used on your firewall to allow incoming connections to the validator and/or redirect these ports to your machine on your home router.
 
 # Configuring ports and other settings
 
@@ -84,7 +84,7 @@ You can specify which shardeum server, validator GUI and CLI branches to build t
 docker build . --build-arg VALIDATOR_BRANCH=dev --build-arg CLI_BRANCH=dev --build-arg GUI_BRANCH=dev -t shardeum-validator 
 ```
 
-## Building a multi-arch release
+## Building and publishing a multi-arch release
 
 This will use buildx to build the image for both amd64 and arm64 architectures and push it to the specified repository:
 
