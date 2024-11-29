@@ -52,6 +52,9 @@ These are the environment variables used by the validator:
 APP_MONITOR RPC_SERVER_URL EXISTING_ARCHIVERS NEXT_PUBLIC_RPC_URL NEXT_EXPLORER_URL INT_IP SHMINT SHMEXT DASHPORT RUNDASHBOARD EXT_IP SERVERIP
 ```
 
+So you could, for example, run the validator without starting the dashboard by specifying `-e RUNDASHBOARD=n` in the docker run command.
+
+
 # Running the validator on other networks
 
 You can override the network configs the image was build with by setting the following environment variables:
