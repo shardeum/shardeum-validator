@@ -17,7 +17,14 @@ docker run \
 
 This will start the validator with the default ports, 8080 for the dashboard GUI, and 9001 and 10001 for the validator P2P ports. The validator will store its data in the `~/shardeum` directory on your machine. You can change this to any directory you like by changing the `-v` argument.
 
-## Note
+You can set the password for the dashboard GUI using the set-password.sh script in the ~/shardeum folder:
+```bash
+cd ~/shardeum
+./set-password.sh
+```
+
+
+## Important
 You'll have to open these ports on your firewall to allow incoming connections to the validator and/or redirect these ports to your machine on your home router.
 
 # Configuring ports and other settings
