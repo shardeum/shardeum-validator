@@ -2,12 +2,12 @@
 
 
 ## Network specific settings, change these for every network relaunch
-: ${APP_MONITOR:=54.185.250.216}
-: ${RPC_SERVER_URL:=https://atomium.shardeum.org}
-: ${EXISTING_ARCHIVERS:='[{"ip":"34.68.218.222","port":4000,"publicKey":"64a3833499130406550729ab20f6bec351d04ec9be3e5f0144d54f01d4d18c45"},{"ip":"34.174.86.241","port":4000,"publicKey":"9b4ba46439ea6cafc6b20d971ab0ef0f21b415c27482652efac96fd61a76d73c"},{"ip":"34.48.51.73","port":4000,"publicKey":"ea72ef63e27cb960bfe02f17d40e74b5c28437af1d0df83dd21ba2084596789f"}]'}
-: ${NEXT_PUBLIC_RPC_URL:=https://atomium.shardeum.org}
-: ${NEXT_EXPLORER_URL:=https://explorer-atomium.shardeum.org}
 
+APP_MONITOR=${APP_MONITOR:-"54.185.250.216"}
+RPC_SERVER_URL=${RPC_SERVER_URL:-"https://atomium.shardeum.org"}
+EXISTING_ARCHIVERS=${EXISTING_ARCHIVERS:-'[{"ip":"34.68.218.222","port":4000,"publicKey":"64a3833499130406550729ab20f6bec351d04ec9be3e5f0144d54f01d4d18c45"},{"ip":"34.174.86.241","port":4000,"publicKey":"9b4ba46439ea6cafc6b20d971ab0ef0f21b415c27482652efac96fd61a76d73c"},{"ip":"34.48.51.73","port":4000,"publicKey":"ea72ef63e27cb960bfe02f17d40e74b5c28437af1d0df83dd21ba2084596789f"}]'}
+NEXT_PUBLIC_RPC_URL=${NEXT_PUBLIC_RPC_URL:-"https://atomium.shardeum.org"}
+NEXT_EXPLORER_URL=${NEXT_EXPLORER_URL:-"https://explorer-atomium.shardeum.org"}
 
 ## Use the values parsed from the docker run env variables, or set defaults
 INT_IP=${INT_IP:-"auto"}
@@ -70,8 +70,8 @@ if [ -z "$LOCALLANIP" ]; then
     LOCALLANIP=$(get_ip)
 fi
 
-if [ -f ~/.profile.modified ]; then
-    echo "
+if [ ! -f /home/node/config/env ]; then
+    cat >/home/node/config/env <<EOL
 APP_MONITOR=$APP_MONITOR
 RPC_SERVER_URL=$RPC_SERVER_URL
 EXISTING_ARCHIVERS=$EXISTING_ARCHIVERS
@@ -84,8 +84,8 @@ DASHPORT=$DASHPORT
 RUNDASHBOARD=$RUNDASHBOARD
 EXT_IP=$EXT_IP
 SERVERIP=$SERVERIP
-" >> /home/node/.profile
-    touch ~/.profile.modified
+export APP_MONITOR RPC_SERVER_URL EXISTING_ARCHIVERS NEXT_PUBLIC_RPC_URL NEXT_EXPLORER_URL INT_IP SHMEXT SHMINT DASHPORT RUNDASHBOARD EXT_IP SERVERIP
+EOL
 fi
 
 ## Make variables available to the CLI app which uses them to start the validator
