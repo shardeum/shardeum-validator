@@ -126,7 +126,7 @@ RUN echo '/home/node/.pm2/logs/*.log /home/node/app/cli/build/logs/*.log {\n\
     endscript\n\
 }"' > /etc/logrotate.d/pm2
 
-RUN echo -e "\n. /home/node/config/env\n" >> /etc/profile
+RUN echo -e "\nsource /home/node/config/env\n" >> /etc/profile
 
 USER node
 WORKDIR /home/node/app
