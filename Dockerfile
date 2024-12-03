@@ -103,11 +103,17 @@ RUN cd /home/node/app/gui && \
     ln -s /home/node/config/selfsigned_node.crt && \
     ln -s /home/node/config/selfsigned.crt
 
-## Map the CLI's secrets.json fromto the config directory
+## Map the CLI's cli-secrets.json from the config directory
 RUN cd /home/node/app/cli/build/ && \
-    touch /home/node/config/secrets.json && \
-    chown node:node /home/node/config/secrets.json && \
-    ln -s /home/node/config/secrets.json
+    touch /home/node/config/cli-secrets.json && \
+    chown node:node /home/node/config/cli-secrets.json && \
+    ln -s /home/node/config/cli-secrets.json secrets.json
+
+# Do the same for the validator secrets
+RUN cd /usr/src/app/dist/src && \
+    touch /home/node/config/validator-secrets.json && \
+    chown node:node /home/node/config/validator-secrets.json && \
+    ln -s /home/node/config/validator-secrets.json secrets.json
 
 RUN cd /home/node/app/cli && npm link
 RUN ln -s /usr/src/app /home/node/app/validator
@@ -126,7 +132,11 @@ RUN echo '/home/node/.pm2/logs/*.log /home/node/app/cli/build/logs/*.log {\n\
     endscript\n\
 }"' > /etc/logrotate.d/pm2
 
-RUN echo -e "\nsource /home/node/config/env\n" >> /etc/profile
+## Link the env file to the various app directories so they're automatically loaded by the apps
+RUN ln -s /home/node/config/env /home/node/app/cli/build/.env
+RUN ln -s /home/node/config/env /home/node/app/gui/build/.env
+RUN ln -s /home/node/config/env /usr/src/app/dist/src/.env
+RUN ln -s /home/node/config/env /usr/src/app/.env
 
 USER node
 WORKDIR /home/node/app
