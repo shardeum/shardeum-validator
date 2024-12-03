@@ -2,8 +2,8 @@
 # Set the branch to build from the command line with --build-arg, for example:
 # $ docker build --build-arg VALIDATOR_BRANCH=itn-1.15.2 .
 ###################################################################################
-ARG VALIDATOR_BRANCH="dev"
-ARG CLI_BRANCH="dev"
+ARG VALIDATOR_BRANCH="1.15.3"
+ARG CLI_BRANCH="main"
 ARG GUI_BRANCH="dev"
 
 ## This should not be changed often or easily without thourough testing
@@ -79,7 +79,7 @@ FROM node:${NODE_VERSION} AS final
 LABEL "org.opencontainers.image.source"="https://github.com/shardeum/shardeum-validator"
 
 RUN apt-get update
-RUN apt-get install -y sudo logrotate iproute2
+RUN apt-get install -y sudo logrotate iproute2 nano
 
 RUN mkdir -p           /home/node/app /home/node/config /usr/src/app && \
     chown -R node:node /home/node/app /home/node/config /usr/src/app && \
