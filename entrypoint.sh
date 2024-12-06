@@ -1,27 +1,15 @@
 #!/usr/bin/env bash
 
 ## Pick up existing environment variables if already set
-if [ -f /home/node/config/env ]; then
-    . /home/node/config/env
+if [ -f /home/node/env ]; then
+    echo "Loading existing env"
+    . /home/node/env
+    echo "New env:"
+    export
 fi
 
-## Network specific settings, change these for every network relaunch
 
-APP_MONITOR=${APP_MONITOR:-"54.185.250.216"}
-RPC_SERVER_URL=${RPC_SERVER_URL:-"https://atomium.shardeum.org"}
-EXISTING_ARCHIVERS=${EXISTING_ARCHIVERS:-"[{\"ip\":\"34.68.218.222\",\"port\":4000,\"publicKey\":\"64a3833499130406550729ab20f6bec351d04ec9be3e5f0144d54f01d4d18c45\"},{\"ip\":\"34.174.86.241\",\"port\":4000,\"publicKey\":\"9b4ba46439ea6cafc6b20d971ab0ef0f21b415c27482652efac96fd61a76d73c\"},{\"ip\":\"34.48.51.73\",\"port\":4000,\"publicKey\":\"ea72ef63e27cb960bfe02f17d40e74b5c28437af1d0df83dd21ba2084596789f\"}]"}
-NEXT_PUBLIC_RPC_URL=${NEXT_PUBLIC_RPC_URL:-"https://atomium.shardeum.org"}
-NEXT_EXPLORER_URL=${NEXT_EXPLORER_URL:-"https://explorer-atomium.shardeum.org"}
-
-## Use the values parsed from the docker run env variables, or set defaults
-INT_IP=${INT_IP:-"auto"}
-SHMEXT=${SHMEXT:-"9001"}
-SHMINT=${SHMINT:-"10001"}
-DASHPORT=${DASHPORT:-"8080"}
-RUNDASHBOARD=${RUNDASHBOARD:-"y"}
-
-
-get_ip() {
+get_net_ip() {
   local ip
   if command -v ip >/dev/null; then
     ip=$(ip addr show $(ip route | awk '/default/ {print $5}') | awk '/inet/ {print $2}' | cut -d/ -f1 | head -n1)
@@ -54,7 +42,7 @@ get_external_ip() {
     external_ip=$(curl --header  "Host: icanhazip.com" -s 104.18.114.97)
   fi
   if [[ -z "$external_ip" ]]; then
-    external_ip=$(get_ip)
+    external_ip=$(get_net_ip)
     if [ $? -eq 0 ]; then
       echo "The IP address is: $IP"
     else
@@ -65,39 +53,33 @@ get_external_ip() {
 }
 
 
-## Autodetect the external IP address if none is provided
-if [ -z "$EXT_IP" ]; then
+## Autodetect the external IP address if none is provided or set to "auto", which is the Dockerfile default
+if [ -z "$EXT_IP" ] || [ "$EXT_IP" = "auto" ]; then
     EXT_IP=$(get_external_ip)
 fi
 SERVERIP=$EXT_IP
-if [ -z "$LOCALLANIP" ]; then
-    LOCALLANIP=$(get_ip)
+if [ -z "$LOCALLANIP" ] || [ "$LOCALLANIP" = "auto" ]; then
+    LOCALLANIP=$(get_net_ip)
 fi
+INT_IP=$LOCALLANIP
 
 
 ## If the env file does not exist, create it so they're loaded automatically next time the container is started
-if [ ! -f /home/node/config/env ]; then
-    cat >/home/node/config/env <<EOL
-APP_MONITOR="$APP_MONITOR"
-RPC_SERVER_URL="$RPC_SERVER_URL"
-EXISTING_ARCHIVERS="$EXISTING_ARCHIVERS"
-NEXT_PUBLIC_RPC_URL="$NEXT_PUBLIC_RPC_URL"
-NEXT_EXPLORER_URL="$NEXT_EXPLORER_URL"
+if [ ! -f /home/node/env ]; then
+    echo "Creating env file"
+    cat >/home/node/env <<EOL
 INT_IP="$INT_IP"
-SHMEXT="$SHMEXT"
-SHMINT="$SHMINT"
-DASHPORT="$DASHPORT"
-RUNDASHBOARD="$RUNDASHBOARD"
 EXT_IP="$EXT_IP"
 SERVERIP="$SERVERIP"
+LOCALLANIP="$LOCALLANIP"
 EOL
 fi
 
 export APP_MONITOR RPC_SERVER_URL EXISTING_ARCHIVERS NEXT_PUBLIC_RPC_URL NEXT_EXPLORER_URL INT_IP SHMEXT SHMINT DASHPORT RUNDASHBOARD EXT_IP SERVERIP
-
+echo "Env vars:"
+export
 
 ## Ensure the certificates for the GUI exist in the config directory
-
 if [ ! -f "/home/node/config/CA.cnf" ]; then
     cd /home/node/config
     echo "Creating certificates"
@@ -147,8 +129,8 @@ DNS.1 = localhost" > selfsigned.cnf
     openssl x509 -req -days 398 -in selfsigned.csr -CA CA_cert.pem -CAkey CA_key.pem -CAcreateserial -out selfsigned_node.crt -extensions req_ext -extfile selfsigned.cnf > /dev/null
 
     cat selfsigned_node.crt CA_cert.pem > selfsigned.crt
-
 fi
+
 
 ## Start the GUI if enabled
 if [ "$RUNDASHBOARD" = "y" ]; then
@@ -156,7 +138,7 @@ if [ "$RUNDASHBOARD" = "y" ]; then
     operator-cli gui start
 fi
 
+
 ## Keep the container running
 cd /home/node/app
-
 pm2 logs
