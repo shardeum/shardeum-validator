@@ -16,9 +16,9 @@ ARG SHMEXT="9001"
 ARG SHMINT="10001"
 ARG DASHPORT="8080"
 ARG RUNDASHBOARD="y"
-ARG INT_IP="auto"
+ARG INT_IP="127.0.0.1"
+ARG LOCALLANIP="127.0.0.1"
 ARG EXT_IP="auto"
-ARG LOCALLANIP="auto"
 ARG SERVERIP="auto"
 
 
@@ -54,15 +54,14 @@ ENV SHMEXT=$SHMEXT
 ENV SHMINT=$SHMINT
 ENV DASHPORT=$DASHPORT
 ENV RUNDASHBOARD=$RUNDASHBOARD
-ENV INT_IP=$SHMINT
+ENV INT_IP=$INT_IP
 ENV EXT_IP=$EXT_IP
 ENV LOCALLANIP=$LOCALLANIP
 ENV SERVERIP=$SERVERIP
 
 # Install Rust build chain for modules
 RUN apt-get update && apt-get install -y \
-    build-essential \
-    curl
+    build-essential curl
 RUN curl https://sh.rustup.rs -sSf | bash -s -- -y
 RUN . $HOME/.cargo/env
 ENV PATH="/root/.cargo/bin:${PATH}"
@@ -107,7 +106,7 @@ ENV SHMEXT=$SHMEXT
 ENV SHMINT=$SHMINT
 ENV DASHPORT=$DASHPORT
 ENV RUNDASHBOARD=$RUNDASHBOARD
-ENV INT_IP=$SHMINT
+ENV INT_IP=$INT_IP
 ENV EXT_IP=$EXT_IP
 ENV LOCALLANIP=$LOCALLANIP
 ENV SERVERIP=$SERVERIP
@@ -153,7 +152,7 @@ ENV SHMEXT=$SHMEXT
 ENV SHMINT=$SHMINT
 ENV DASHPORT=$DASHPORT
 ENV RUNDASHBOARD=$RUNDASHBOARD
-ENV INT_IP=$SHMINT
+ENV INT_IP=$INT_IP
 ENV EXT_IP=$EXT_IP
 ENV LOCALLANIP=$LOCALLANIP
 ENV SERVERIP=$SERVERIP
@@ -202,7 +201,7 @@ ENV SHMEXT=$SHMEXT
 ENV SHMINT=$SHMINT
 ENV DASHPORT=$DASHPORT
 ENV RUNDASHBOARD=$RUNDASHBOARD
-ENV INT_IP=$SHMINT
+ENV INT_IP=$INT_IP
 ENV EXT_IP=$EXT_IP
 ENV LOCALLANIP=$LOCALLANIP
 ENV SERVERIP=$SERVERIP
@@ -239,12 +238,6 @@ RUN cd /home/node/app/cli/build/ && \
     chown node:node /home/node/config/cli-secrets.json && \
     ln -s /home/node/config/cli-secrets.json secrets.json
 
-# Do the same for the validator secrets
-RUN cd /usr/src/app/dist/src && \
-    touch /home/node/config/validator-secrets.json && \
-    chown node:node /home/node/config/validator-secrets.json && \
-    ln -s /home/node/config/validator-secrets.json secrets.json
-
 RUN cd /home/node/app/cli && npm link
 RUN ln -s /usr/src/app /home/node/app/validator
 
@@ -266,12 +259,12 @@ RUN echo '/home/node/.pm2/logs/*.log /home/node/app/cli/build/logs/*.log {\n\
 }"' > /etc/logrotate.d/pm2
 
 ## Link the env file to the various app directories so they're automatically loaded by the apps
-RUN ln -s /home/node/config/env /home/node/app/cli/build/.env
-RUN ln -s /home/node/config/env /home/node/app/cli/.env
-RUN ln -s /home/node/config/env /home/node/app/gui/build/.env
-RUN ln -s /home/node/config/env /home/node/app/gui/.env
-RUN ln -s /home/node/config/env /usr/src/app/dist/src/.env
-RUN ln -s /home/node/config/env /usr/src/app/.env
+RUN ln -s /home/node/env /home/node/app/cli/build/.env
+RUN ln -s /home/node/env /home/node/app/cli/.env
+RUN ln -s /home/node/env /home/node/app/gui/build/.env
+RUN ln -s /home/node/env /home/node/app/gui/.env
+RUN ln -s /home/node/env /usr/src/app/dist/src/.env
+RUN ln -s /home/node/env /usr/src/app/.env
 
 USER node
 WORKDIR /home/node/app
