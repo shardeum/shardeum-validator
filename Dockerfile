@@ -9,7 +9,8 @@ ARG GUI_BRANCH="dev"
 ## Network details
 ARG APP_MONITOR="54.185.250.216"
 ARG RPC_SERVER_URL="https://atomium.shardeum.org"
-ARG EXISTING_ARCHIVERS="[{\"ip\":\"34.68.218.222\",\"port\":4000,\"publicKey\":\"64a3833499130406550729ab20f6bec351d04ec9be3e5f0144d54f01d4d18c45\"},{\"ip\":\"34.174.86.241\",\"port\":4000,\"publicKey\":\"9b4ba46439ea6cafc6b20d971ab0ef0f21b415c27482652efac96fd61a76d73c\"},{\"ip\":\"34.48.51.73\",\"port\":4000,\"publicKey\":\"ea72ef63e27cb960bfe02f17d40e74b5c28437af1d0df83dd21ba2084596789f\"}]"
+# ARG EXISTING_ARCHIVERS="[{\"ip\":\"34.68.218.222\",\"port\":4000,\"publicKey\":\"64a3833499130406550729ab20f6bec351d04ec9be3e5f0144d54f01d4d18c45\"},{\"ip\":\"34.174.86.241\",\"port\":4000,\"publicKey\":\"9b4ba46439ea6cafc6b20d971ab0ef0f21b415c27482652efac96fd61a76d73c\"},{\"ip\":\"34.48.51.73\",\"port\":4000,\"publicKey\":\"ea72ef63e27cb960bfe02f17d40e74b5c28437af1d0df83dd21ba2084596789f\"}]"
+ARG EXISTING_ARCHIVERS='[{"ip":"34.68.218.222","port":4000,"publicKey":"64a3833499130406550729ab20f6bec351d04ec9be3e5f0144d54f01d4d18c45"},{"ip":"34.174.86.241","port":4000,"publicKey":"9b4ba46439ea6cafc6b20d971ab0ef0f21b415c27482652efac96fd61a76d73c"},{"ip":"34.48.51.73","port":4000,"publicKey":"ea72ef63e27cb960bfe02f17d40e74b5c28437af1d0df83dd21ba2084596789f"}]'
 ARG NEXT_PUBLIC_RPC_URL="https://atomium.shardeum.org"
 ARG NEXT_EXPLORER_URL="https://explorer-atomium.shardeum.org"
 ARG SHMEXT="9001"
@@ -61,19 +62,38 @@ ENV SERVERIP=$SERVERIP
 
 # Install Rust build chain for modules
 RUN apt-get update && apt-get install -y \
-    build-essential curl
+    build-essential curl libsodium-dev
 RUN curl https://sh.rustup.rs -sSf | bash -s -- -y
 RUN . $HOME/.cargo/env
 ENV PATH="/root/.cargo/bin:${PATH}"
 RUN rustup install 1.74.1 && rustup default 1.74.1
 
+## Potential sodium fix in builx multi-platform builds, isn't required for qemu multiplatform builds
+# RUN apt install -y libsodium-dev
+
+# RUN mkdir -vp /app/pre-build-node_modules/sodium/deps/build/lib/
+# RUN mkdir -vp /app/pre-build-node_modules/sodium/deps/build/lib/
+
+# RUN ln -s /usr/lib/aarch64-linux-gnu/libsodium.so.23.3.0 /app/pre-build-node_modules/sodium/deps/build/lib/libsodium.so
+# RUN ln -s /usr/lib/aarch64-linux-gnu/libsodium.a /app/pre-build-node_modules/sodium/deps/build/lib/libsodium.a
+
+# RUN cd pre-build-node_modules/sodium && yarn link && cd ../..
+# RUN yarn link sodium
+# RUN yarn install
+
+### Alternative fix
+# RUN mkdir node_modules
+# RUN git clone https://github.com/paixaop/node-sodium.git node_modules/sodium
+# RUN sed -i '/make -j3 check/d' node_modules/sodium/Makefile
+# #Do not use NPM ci here, only install.
+# RUN npm install
 
 WORKDIR /usr/src/app
 #ENV NODE_ENV=production
 ENV VALIDATOR_BRANCH=${VALIDATOR_BRANCH}
 RUN git clone https://github.com/shardeum/shardeum.git . && \
     git switch ${VALIDATOR_BRANCH} && \
-    npm install && \
+    npm install --maxsockets 1 --noproxy registry.npmjs.org && \
     npm run compile
 
 
@@ -119,7 +139,7 @@ WORKDIR /home/node/app
 ENV CLI_BRANCH=${CLI_BRANCH}
 RUN git clone https://github.com/shardeum/validator-cli.git cli && cd cli && \
     git switch ${CLI_BRANCH} && \
-    npm install && \
+    npm install --maxsockets 1 --noproxy registry.npmjs.org && \
     npm run compile
 
 
@@ -211,7 +231,7 @@ RUN apt-get install -y sudo logrotate iproute2 nano
 
 RUN mkdir -p           /home/node/app /home/node/config /usr/src/app && \
     chown -R node:node /home/node/app /home/node/config /usr/src/app && \
-    chmod 2775 -R      /home/node/app /home/node/config /usr/src/app
+    chmod 2777 -R      /home/node/app /home/node/config /usr/src/app
 
 COPY --from=validator --chown=node:node /usr/src/app       /usr/src/app
 COPY --from=cli --chown=node:node       /home/node/app/cli /home/node/app/cli
@@ -242,7 +262,7 @@ RUN cd /home/node/app/cli && npm link
 RUN ln -s /usr/src/app /home/node/app/validator
 
 ## Install PM2 globally
-RUN npm install -g pm2
+RUN npm install --maxsockets 1 --noproxy registry.npmjs.org -g pm2
 
 RUN echo '/home/node/.pm2/logs/*.log /home/node/app/cli/build/logs/*.log {\n\
     daily\n\
