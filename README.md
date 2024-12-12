@@ -4,6 +4,7 @@ The validator which allows you to participate in the Shardeum network and earn S
 To run the Shardeum Validator you'll need to have Docker installed on your machine. You can find instructions on how to install Docker [here](https://docs.docker.com/get-docker/). Then run the following command to start the validator:
 
 ```bash
+docker pull ghcr.io/shardeum/shardeum-validator
 docker run \
     --name shardeum-validator \
     -p 8080:8080 \
