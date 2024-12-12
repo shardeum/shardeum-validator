@@ -125,7 +125,8 @@ RUN git clone https://github.com/shardeum/validator-gui.git gui && cd gui && \
 ###################################################################################
 ### Build the final image
 ###################################################################################
-FROM node:${NODE_VERSION}-slim AS final
+# FROM node:${NODE_VERSION}-slim AS final
+FROM node:${NODE_VERSION} AS final
 
 # Link this Dockerfile to the image in the GHCR
 LABEL "org.opencontainers.image.source"="https://github.com/shardeum/shardeum-validator"
