@@ -9,7 +9,7 @@ ARG GUI_BRANCH="itn4"
 ## Network details
 ARG APP_MONITOR="34.28.123.3"
 ARG RPC_SERVER_URL="https://atomium.shardeum.org"
-ARG EXISTING_ARCHIVERS='{"archivers":[{"ip":"35.193.191.159","port":"4000","publicKey":"1c63734aedef5665d6cf02d3a79ae30aedcbd27eae3b76fff05d587a6ac62981"},{"ip":"34.73.94.45","port":"4000","publicKey":"11086314ccf8642906b99f09cf3ae9a13370c57106653cd28fc1a9eee2560b64"},{"ip":"34.19.93.147","port":"4000","publicKey":"b09a8792593682cbffbbf2fc3bd812d8143740197a5f435c77a38740397088ac"}]}'
+ARG EXISTING_ARCHIVERS='[{"ip":"35.193.191.159","port":"4000","publicKey":"1c63734aedef5665d6cf02d3a79ae30aedcbd27eae3b76fff05d587a6ac62981"},{"ip":"34.73.94.45","port":"4000","publicKey":"11086314ccf8642906b99f09cf3ae9a13370c57106653cd28fc1a9eee2560b64"},{"ip":"34.19.93.147","port":"4000","publicKey":"b09a8792593682cbffbbf2fc3bd812d8143740197a5f435c77a38740397088ac"}]'
 ARG NEXT_PUBLIC_RPC_URL="https://atomium.shardeum.org"
 ARG NEXT_EXPLORER_URL="https://explorer-atomium.shardeum.org"
 ARG SHMEXT="9001"
