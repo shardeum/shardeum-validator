@@ -187,6 +187,11 @@ done
 #docker-safe stop shardeum-validator 2>/dev/null
 #docker-safe rm shardeum-validator 2>/dev/null
 
+## Make sure the node user can access and write to the shared directory
+if [ "$(id -u)" -eq 0 ]; then
+    mkdir -p ${NODEHOME} 
+    chown 1000:1000 ${NODEHOME} 
+fi
 
 docker-safe pull ghcr.io/shardeum/shardeum-validator:latest
 docker-safe run \

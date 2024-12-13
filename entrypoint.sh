@@ -139,6 +139,8 @@ if [ "$RUNDASHBOARD" = "y" ]; then
     operator-cli gui start
 fi
 
+cp -f /home/node/app/set-password.sh /home/node/app/shell.sh /home/node/app/operator-cli.sh /home/node/config/
+
 
 ## Keep the container running
 cd /home/node/app
