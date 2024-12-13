@@ -211,10 +211,21 @@ docker-safe run \
     --detach \
     ghcr.io/shardeum/shardeum-validator
 
-echo "Shardeum Validator starting.."
-sleep 4
+echo "Shardeum Validator starting. Waiting for the container to be available.."
+
+timeout=60
+elapsed=0
+
+while [ ! -f "${NODEHOME}/set-password.sh" ]; do
+  sleep 1
+  elapsed=$((elapsed + 1))
+  if [ "$elapsed" -ge "$timeout" ]; then
+    echo "Timeout: set-password.sh not found after 60 seconds."
+    exit 1
+  fi
+done
 
 echo "Enter a new password for the validator dashboard"
-${NODEHOME}/set-password.sh
+"${NODEHOME}/set-password.sh"
 
-echo "Shardeum Validator is now running. You can access the dashboard at http://${EXTERNALIP}:${DASHPORT}"
+echo "Shardeum Validator is now running. You can access the dashboard at http://YOUR.HOST:${DASHPORT}"
