@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-set -e
 
 read -p "During this early stage of Betanet the Shardeum team will be collecting some performance and debugging info from your node to help improve future versions of the software.
 This is only temporary and will be discontinued as we get closer to mainnet.
@@ -182,17 +181,19 @@ while :; do
 done
 
 
-## Remove any previous instance of the validator if it exists
-## TODO: Add a check to see if the container is running and prompt the user to stop it
-#docker-safe stop shardeum-validator 2>/dev/null
-#docker-safe rm shardeum-validator 2>/dev/null
+## Stop and remove any previous instance of the validator if it exists
+if docker-safe ps --filter "name=shardeum-validator" --format "{{.Names}}" | grep -q "^shardeum-validator$"; then
+    docker-safe stop shardeum-validator 2>/dev/null
+    docker-safe rm shardeum-validator 2>/dev/null
+fi
 
-## Make sure the node user can access and write to the shared directory
+## Make sure the node user can access and write to the shared directory if this script is run as root
 if [ "$(id -u)" -eq 0 ]; then
     mkdir -p ${NODEHOME} 
     chown 1000:1000 ${NODEHOME} 
 fi
 
+## Pull the latest image and run the validator
 docker-safe pull ghcr.io/shardeum/shardeum-validator:latest
 docker-safe run \
     --name shardeum-validator \
