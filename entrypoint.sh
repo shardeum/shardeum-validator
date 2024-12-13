@@ -8,11 +8,6 @@ if [ -f /home/node/env ]; then
     export
 fi
 
-## Copy the shell scripts to the config directory if they don't exist
-if [ ! -f /home/node/app/set-password.sh ]; then
-  cp -f /home/node/app/set-password.sh /home/node/app/shell.sh /home/node/app/operator-cli.sh /home/node/config/
-fi
-
 get_net_ip() {
   local ip
   if command -v ip >/dev/null; then
@@ -83,6 +78,12 @@ fi
 export APP_MONITOR RPC_SERVER_URL EXISTING_ARCHIVERS NEXT_PUBLIC_RPC_URL NEXT_EXPLORER_URL INT_IP SHMEXT SHMINT DASHPORT RUNDASHBOARD EXT_IP SERVERIP
 echo "Env vars:"
 export
+
+## Copy the shell scripts to the config directory if they don't exist
+if [ ! -f /home/node/app/set-password.sh ]; then
+  cp -f /home/node/app/set-password.sh /home/node/app/shell.sh /home/node/app/operator-cli.sh /home/node/config/
+fi
+
 
 ## Ensure the certificates for the GUI exist in the config directory
 if [ ! -f "/home/node/config/CA.cnf" ]; then
