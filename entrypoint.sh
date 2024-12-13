@@ -8,6 +8,10 @@ if [ -f /home/node/env ]; then
     export
 fi
 
+## Copy the shell scripts to the config directory if they don't exist
+if [ ! -f /home/node/app/set-password.sh ]; then
+  cp -f /home/node/app/set-password.sh /home/node/app/shell.sh /home/node/app/operator-cli.sh /home/node/config/
+fi
 
 get_net_ip() {
   local ip
@@ -138,9 +142,6 @@ if [ "$RUNDASHBOARD" = "y" ]; then
     echo "Starting validator GUI"
     operator-cli gui start
 fi
-
-cp -f /home/node/app/set-password.sh /home/node/app/shell.sh /home/node/app/operator-cli.sh /home/node/config/
-
 
 ## Keep the container running
 cd /home/node/app
