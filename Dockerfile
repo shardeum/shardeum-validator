@@ -24,10 +24,10 @@ ARG SERVERIP="auto"
 ## These should not be changed often or easily without thourough testing
 ## 6 Gigabytes of memory for the node process for the validator to deal with the large amount of data it has to be able to handle
 ARG NODE_OPTIONS="--max-old-space-size=6144"
-ARG minNodes=640
-ARG baselineNodes=640
+ARG minNodes=1280
+ARG baselineNodes=1280
 ARG nodesPerConsensusGroup=128
-ARG maxNodes=1200
+ARG maxNodes=1500
 
 ## Define what Docker Node version image to use for the build & final image
 ARG NODE_VERSION=18.19.1
