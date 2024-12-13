@@ -159,6 +159,60 @@ while :; do
   fi
 done
 
+
+get_net_ip() {
+  local ip
+  if command -v ip >/dev/null; then
+    ip=$(ip addr show $(ip route | awk '/default/ {print $5}') | awk '/inet/ {print $2}' | cut -d/ -f1 | head -n1)
+  elif command -v netstat >/dev/null; then
+    # Get the default route interface
+    interface=$(netstat -rn | awk '/default/{print $4}' | head -n1)
+    # Get the IP address for the default interface
+    ip=$(ifconfig "$interface" | awk '/inet /{print $2}')
+  else
+    echo "Error: neither 'ip' nor 'ifconfig' command found. Submit a bug for your OS."
+    return 1
+  fi
+  echo $ip
+}
+
+get_external_ip() {
+  external_ip=''
+  external_ip=$(curl -s https://api.ipify.org)
+  if [[ -z "$external_ip" ]]; then
+    external_ip=$(curl -s http://checkip.dyndns.org | grep -oE "\b([0-9]{1,3}\.){3}[0-9]{1,3}\b")
+  fi
+  if [[ -z "$external_ip" ]]; then
+    external_ip=$(curl -s http://ipecho.net/plain)
+  fi
+  if [[ -z "$external_ip" ]]; then
+    external_ip=$(curl -s https://icanhazip.com/)
+  fi
+    if [[ -z "$external_ip" ]]; then
+    external_ip=$(curl --header  "Host: icanhazip.com" -s 104.18.114.97)
+  fi
+  if [[ -z "$external_ip" ]]; then
+    external_ip=$(get_net_ip)
+    if [ $? -eq 0 ]; then
+      echo "The IP address is: $IP"
+    else
+      external_ip="localhost"
+    fi
+  fi
+  echo $external_ip
+}
+
+if [ -z "$EXT_IP" ] || [ "$EXT_IP" = "auto" ]; then
+    EXT_IP=$(get_external_ip)
+fi
+SERVERIP=$EXT_IP
+
+if [ -z "$INT_IP" ] || [ "$INT_IP" = "auto" ]; then
+  INT_IP=$EXT_IP
+fi
+LOCALLANIP=$INT_IP
+
+
 while :; do
   echo "To run a validator on the Shardeum network, you will need to open two ports in your firewall."
   read -p "This allows p2p communication between nodes. Enter the first port (1025-65536) for p2p communication (default $SHMEXT_DEFAULT): " SHMEXT
@@ -204,6 +258,8 @@ docker-safe run \
     -e DASHPORT=${DASHPORT} \
     -e EXT_IP=${EXTERNALIP} \
     -e INT_IP=${INTERNALIP} \
+    -e SERVERIP=${SERVERIP} \
+    -e LOCALLANIP=${LOCALLANIP} \
     -e SHMEXT=${SHMEXT} \
     -e SHMINT=${SHMINT} \
     -v ${NODEHOME}:/home/node/config \
