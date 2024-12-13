@@ -7,9 +7,9 @@ ARG CLI_BRANCH="itn4"
 ARG GUI_BRANCH="itn4"
 
 ## Network details
-ARG APP_MONITOR="54.185.250.216"
+ARG APP_MONITOR="34.28.123.3"
 ARG RPC_SERVER_URL="https://atomium.shardeum.org"
-ARG EXISTING_ARCHIVERS='[{"ip":"34.68.218.222","port":4000,"publicKey":"64a3833499130406550729ab20f6bec351d04ec9be3e5f0144d54f01d4d18c45"},{"ip":"34.174.86.241","port":4000,"publicKey":"9b4ba46439ea6cafc6b20d971ab0ef0f21b415c27482652efac96fd61a76d73c"},{"ip":"34.48.51.73","port":4000,"publicKey":"ea72ef63e27cb960bfe02f17d40e74b5c28437af1d0df83dd21ba2084596789f"}]'
+ARG EXISTING_ARCHIVERS='{"archivers":[{"ip":"35.193.191.159","port":"4000","publicKey":"1c63734aedef5665d6cf02d3a79ae30aedcbd27eae3b76fff05d587a6ac62981"},{"ip":"34.73.94.45","port":"4000","publicKey":"11086314ccf8642906b99f09cf3ae9a13370c57106653cd28fc1a9eee2560b64"},{"ip":"34.19.93.147","port":"4000","publicKey":"b09a8792593682cbffbbf2fc3bd812d8143740197a5f435c77a38740397088ac"}]}'
 ARG NEXT_PUBLIC_RPC_URL="https://atomium.shardeum.org"
 ARG NEXT_EXPLORER_URL="https://explorer-atomium.shardeum.org"
 ARG SHMEXT="9001"
@@ -24,6 +24,11 @@ ARG SERVERIP="auto"
 ## These should not be changed often or easily without thourough testing
 ## 6 Gigabytes of memory for the node process for the validator to deal with the large amount of data it has to be able to handle
 ARG NODE_OPTIONS="--max-old-space-size=6144"
+ARG minNodes=640
+ARG baselineNodes=640
+ARG nodesPerConsensusGroup=128
+ARG maxNodes=1200
+
 ## Define what Docker Node version image to use for the build & final image
 ARG NODE_VERSION=18.19.1
 
@@ -161,6 +166,10 @@ ENV EXT_IP=$EXT_IP
 ENV LOCALLANIP=$LOCALLANIP
 ENV SERVERIP=$SERVERIP
 ENV NODE_OPTIONS=$NODE_OPTIONS
+ENV minNodes=$minNodes
+ENV baselineNodes=$baselineNodes
+ENV nodesPerConsensusGroup=$nodesPerConsensusGroup
+ENV maxNodes=$maxNodes
 
 RUN apt-get update
 RUN apt-get install -y logrotate iproute2 nano git openssl && \

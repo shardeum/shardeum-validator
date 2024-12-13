@@ -58,14 +58,11 @@ if [ -z "$EXT_IP" ] || [ "$EXT_IP" = "auto" ]; then
     EXT_IP=$(get_external_ip)
 fi
 SERVERIP=$EXT_IP
-LOCALLANIP=$EXT_IP
-INT_IP=$EXT_IP
 
-## The Shardeum server seems to require an external IP for the INT_IP(??), so we'll use the external IP for both
-# if [ -z "$LOCALLANIP" ] || [ "$LOCALLANIP" = "auto" ]; then
-#     LOCALLANIP=$(get_net_ip)
-# fi
-# INT_IP=$LOCALLANIP
+if [ -z "$INT_IP" ] || [ "$INT_IP" = "auto" ]; then
+  INT_IP=$EXT_IP
+fi
+LOCALLANIP=$INT_IP
 
 
 ## If the env file does not exist, create it so they're loaded automatically next time the container is started
