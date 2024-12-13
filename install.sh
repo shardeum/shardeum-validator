@@ -24,6 +24,7 @@ then
   exit
 fi
 
+echo "If you are upgrading from a previous version, please specify the directory where it was installed."
 read -p "What base directory should the node use (default ~/shardeum): " input
 
 # Set default value if input is empty
@@ -91,7 +92,6 @@ RUNDASHBOARD=$(echo "$RUNDASHBOARD" | tr '[:upper:]' '[:lower:]')
 RUNDASHBOARD=${RUNDASHBOARD:-y}
 
 echo # New line after inputs.
-# echo "Password saved as:" $DASHPASS #DEBUG: TEST PASSWORD WAS RECORDED AFTER ENTERED.
 
 while :; do
   read -p "Enter the port (1025-65536) to access the web based Dashboard (default $DASHPORT_DEFAULT): " DASHPORT
@@ -195,8 +195,8 @@ docker-safe run \
     -p ${SHMINT}:${SHMINT} \
     -e RUNDASHBOARD=${RUNDASHBOARD} \
     -e DASHPORT=${DASHPORT} \
-    -e EXTERNALIP=${EXTERNALIP} \
-    -e INTERNALIP=${INTERNALIP} \
+    -e EXT_IP=${EXTERNALIP} \
+    -e INT_IP=${INTERNALIP} \
     -e SHMEXT=${SHMEXT} \
     -e SHMINT=${SHMINT} \
     -v ${NODEHOME}:/home/node/app/config \
