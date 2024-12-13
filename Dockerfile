@@ -150,6 +150,10 @@ ARG EXT_IP
 ARG LOCALLANIP
 ARG SERVERIP
 ARG NODE_OPTIONS
+ARG minNodes
+ARG baselineNodes
+ARG nodesPerConsensusGroup
+ARG maxNodes
 
 ## Inherit the ARGs from the to level and expose them in the final image
 ENV APP_MONITOR=$APP_MONITOR

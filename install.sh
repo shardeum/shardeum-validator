@@ -183,8 +183,9 @@ done
 
 
 ## Remove any previous instance of the validator if it exists
-docker-safe stop shardeum-validator 2>/dev/null
-docker-safe rm shardeum-validator 2>/dev/null
+## TODO: Add a check to see if the container is running and prompt the user to stop it
+#docker-safe stop shardeum-validator 2>/dev/null
+#docker-safe rm shardeum-validator 2>/dev/null
 
 
 docker-safe pull ghcr.io/shardeum/shardeum-validator:latest
@@ -199,10 +200,10 @@ docker-safe run \
     -e INT_IP=${INTERNALIP} \
     -e SHMEXT=${SHMEXT} \
     -e SHMINT=${SHMINT} \
-    -v ${NODEHOME}:/home/node/app/config \
+    -v ${NODEHOME}:/home/node/config \
     --restart=always \
     --detach \
-    shardeum-validator
+    ghcr.io/shardeum/shardeum-validator
 
 echo "Shardeum Validator starting.."
 sleep 4
