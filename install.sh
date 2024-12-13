@@ -202,15 +202,17 @@ get_external_ip() {
   echo $external_ip
 }
 
-if [ -z "$EXT_IP" ] || [ "$EXT_IP" = "auto" ]; then
-    EXT_IP=$(get_external_ip)
+if [ -z "$EXTERNALIP" ] || [ "$EXTERNALIP" = "auto" ]; then
+    EXTERNALIP=$(get_external_ip)
 fi
+$EXT_IP=$EXTERNALIP
 SERVERIP=$EXT_IP
 
-if [ -z "$INT_IP" ] || [ "$INT_IP" = "auto" ]; then
-  INT_IP=$EXT_IP
+if [ -z "$INTERNALIP" ] || [ "$INTERNALIP" = "auto" ]; then
+  INTERNALIP=$EXT_IP
 fi
-LOCALLANIP=$INT_IP
+INT_IP=$INTERNALIP
+LOCALLANIP=$INTERNALIP
 
 
 while :; do
