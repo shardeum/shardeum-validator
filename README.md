@@ -10,7 +10,7 @@ docker run \
     -p 8080:8080 \
     -p 9001:9001 \
     -p 10001:10001 \
-    -v $(pwd)/shardeum:/home/node/app/config \
+    -v $(pwd)/shardeum:/home/node/config \
     --restart=always \
     --detach \
     shardeum-validator
@@ -41,7 +41,7 @@ docker run \
     -e SHMINT=11001 \
     -e SHMEXT=12002 \
     -e DASHPORT=10080 \
-    -v $(pwd)/shardeum:/home/node/app/config \
+    -v $(pwd)/shardeum:/home/node/config \
     --restart=always \
     --detach \
     shardeum-validator
@@ -66,7 +66,7 @@ docker run \
     -p 8080:8080 \
     -p 9001:9001 \
     -p 10001:10001 \
-    -v $(pwd)/shardeum:/home/node/app/config \
+    -v $(pwd)/shardeum:/home/node/config \
     -e RPC_SERVER_URL='http://localhost:123' \
     -e APP_MONITOR='http://localhost:456' \
     -e EXISTING_ARCHIVERS='[{"ip":"127.0.0.1","port":4000,"publicKey":"somekeygoeshere"}]' \
