@@ -76,13 +76,13 @@ EOL
 fi
 
 export APP_MONITOR RPC_SERVER_URL EXISTING_ARCHIVERS NEXT_PUBLIC_RPC_URL NEXT_EXPLORER_URL INT_IP SHMEXT SHMINT DASHPORT RUNDASHBOARD EXT_IP SERVERIP
-echo "Env vars:"
+echo "Env is now:"
 export
 
 ## Copy the shell scripts to the config directory if they don't exist
-if [ ! -f /home/node/config/set-password.sh ]; then
-  cp -f /home/node/app/set-password.sh /home/node/app/shell.sh /home/node/app/operator-cli.sh /home/node/config/
-fi
+#if [ ! -f /home/node/config/set-password.sh ]; then
+cp -f /home/node/app/set-password.sh /home/node/app/shell.sh /home/node/app/operator-cli.sh /home/node/config/
+#fi
 
 
 ## Ensure the certificates for the GUI exist in the config directory
