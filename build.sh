@@ -19,6 +19,7 @@ fi
 
 # Build and tag the image
 docker build . \
+    --no-cache \
     --build-arg VALIDATOR_BRANCH=it4-1.16.1 \
     --build-arg CLI_BRANCH=itn4 \
     --build-arg GUI_BRANCH=itn4 \
