@@ -80,7 +80,7 @@ echo "Env vars:"
 export
 
 ## Copy the shell scripts to the config directory if they don't exist
-if [ ! -f /home/node/app/set-password.sh ]; then
+if [ ! -f /home/node/config/set-password.sh ]; then
   cp -f /home/node/app/set-password.sh /home/node/app/shell.sh /home/node/app/operator-cli.sh /home/node/config/
 fi
 
