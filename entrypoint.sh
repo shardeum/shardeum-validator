@@ -43,7 +43,7 @@ get_external_ip() {
   if [[ -z "$external_ip" ]]; then
     external_ip=$(get_net_ip)
     if [ $? -eq 0 ]; then
-      echo "The IP address is: $IP"
+      echo "$IP"
     else
       external_ip="localhost"
     fi
