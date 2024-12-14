@@ -1,9 +1,10 @@
 #!/bin/bash
 
-if [ -z "$TAG" ]; then
+if [ -z "$1" ]; then
     echo "No tag provided. Exiting."
     exit 1
 fi
+TAG=$1
 
 # Determine the architecture
 ARCH=$(uname -m)
