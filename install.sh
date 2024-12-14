@@ -205,7 +205,7 @@ get_external_ip() {
 if [ -z "$EXTERNALIP" ] || [ "$EXTERNALIP" = "auto" ]; then
     EXTERNALIP=$(get_external_ip)
 fi
-$EXT_IP=$EXTERNALIP
+EXT_IP=$EXTERNALIP
 SERVERIP=$EXT_IP
 
 if [ -z "$INTERNALIP" ] || [ "$INTERNALIP" = "auto" ]; then
