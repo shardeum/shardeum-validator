@@ -37,7 +37,7 @@ read_password() {
       PASSWORD+="$CHAR"
     fi
   done
-  echo "'$PASSWORD'"
+  echo $PASSWORD
 }
 
 echo -n -e "Password requirements: min 8 characters, at least 1 lower case letter, at least 1 upper case letter, at least 1 number, at least 1 special character !@#$%^&*()_+$ \nSet the password to access the Dashboard:"
@@ -48,4 +48,4 @@ if [ -z "$DASHPASS" ]; then
     exit 1
 fi
 
-docker-safe exec -it shardeum-validator operator-cli gui set password $DASHPASS 1>/dev/null
+docker-safe exec -it shardeum-validator operator-cli gui set password "$DASHPASS" 1>/dev/null
