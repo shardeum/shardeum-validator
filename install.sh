@@ -34,9 +34,8 @@ while [[ ! $input =~ ^[[:alnum:]_.~/-]+$ || $input =~ [[:space:]] ]]; do
   echo "Error: The directory name contains invalid characters or spaces."
   echo "Allowed characters are alphanumeric characters, tilde (~), forward slash (/), underscore (_), period (.), and hyphen (-)."
   read -p "Please enter a valid base directory (default ~/shardeum): " input
-
   # Set default if input is empty
-  input=${input:-~/.shardeum}
+  input=${input:-~/shardeum}
 done
 
 # Echo the final directory used (with ~ if present)
@@ -245,12 +244,12 @@ fi
 
 ## Make sure the node user can access and write to the shared directory if this script is run as root
 if [ "$(id -u)" -eq 0 ]; then
-    mkdir -p ${NODEHOME} 
-    chown 1000:1000 ${NODEHOME} 
+    mkdir -p ${NODEHOME} 2>/dev/null
+    chown 1000:1000 ${NODEHOME} 2>/dev/null
 fi
 
 ## Pull the latest image and run the validator
-docker-safe pull ghcr.io/shardeum/shardeum-validator:latest
+docker-safe pull ghcr.io/shardeum/shardeum-validator:latest 1>/dev/null
 docker-safe run \
     --name shardeum-validator \
     -p ${DASHPORT}:${DASHPORT} \
@@ -267,7 +266,7 @@ docker-safe run \
     -v ${NODEHOME}:/home/node/config \
     --restart=always \
     --detach \
-    ghcr.io/shardeum/shardeum-validator
+    ghcr.io/shardeum/shardeum-validator 1>/dev/null
 
 echo "Shardeum Validator starting. Waiting for the container to be available.."
 
