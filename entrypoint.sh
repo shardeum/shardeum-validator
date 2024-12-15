@@ -141,6 +141,7 @@ fi
 ## Start the GUI if enabled
 if [ "$RUNDASHBOARD" = "y" ]; then
     echo "Starting validator GUI"
+    operator-cli gui set port $DASHPORT
     operator-cli gui start
 fi
 
