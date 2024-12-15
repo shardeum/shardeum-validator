@@ -248,8 +248,10 @@ if [ "$(id -u)" -eq 0 ]; then
     chown 1000:1000 ${NODEHOME} 2>/dev/null
 fi
 
+echo "Downloading the shardeum-validator image and starting the validator container"
+
 ## Pull the latest image and run the validator
-docker-safe pull ghcr.io/shardeum/shardeum-validator:latest 1>/dev/null
+docker-safe pull ghcr.io/shardeum/shardeum-validator:latest 
 docker-safe run \
     --name shardeum-validator \
     -p ${DASHPORT}:${DASHPORT} \
@@ -268,7 +270,8 @@ docker-safe run \
     --detach \
     ghcr.io/shardeum/shardeum-validator 1>/dev/null
 
-echo "Shardeum Validator starting. Waiting for the container to be available.."
+echo "Shardeum Validator starting."
+echo "Waiting for the container to be available (max 60 seconds).."
 
 timeout=60
 elapsed=0
