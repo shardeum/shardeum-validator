@@ -172,7 +172,7 @@ get_net_ip() {
     echo "Error: neither 'ip' nor 'ifconfig' command found. Submit a bug for your OS."
     return 1
   fi
-  echo $ip
+  echo -n $ip
 }
 
 get_external_ip() {
@@ -193,7 +193,7 @@ get_external_ip() {
   if [[ -z "$external_ip" ]]; then
     external_ip=$(get_net_ip)
     if [ $? -eq 0 ]; then
-      echo "The IP address is: $IP"
+      echo -n "$IP"
     else
       external_ip="localhost"
     fi
@@ -285,4 +285,4 @@ done
 echo "Enter a new password for the validator dashboard"
 "${NODEHOME}/set-password.sh"
 
-echo "Shardeum Validator is now running. You can access the dashboard at http://YOUR.HOST:${DASHPORT}"
+echo "Shardeum Validator is now running. You can access the dashboard at http://${EXTERNALIP}:${DASHPORT}"

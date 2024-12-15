@@ -9,6 +9,8 @@ TAG=$1
 ARCH=$(uname -m)
 if [ "$ARCH" == "aarch64" ]; then
     ARCH_TAG="arm64"
+elif [ "$ARCH" == "arm64" ]; then
+    ARCH_TAG="arm64"
 elif [ "$ARCH" == "x86_64" ]; then
     ARCH_TAG="amd64"
 else
@@ -17,10 +19,10 @@ else
 fi
 
 ## Stop and remove any previous instance of the validator if it exists
-if docker-safe ps --filter "name=shardeum-validator" --format "{{.Names}}" | grep -q "^shardeum-validator$"; then
+if docker ps --filter "name=shardeum-validator" --format "{{.Names}}" | grep -q "^shardeum-validator$"; then
     echo "Stopping and removing previous instance of shardeum-validator"
-    docker-safe stop shardeum-validator 2>/dev/null
-    docker-safe rm shardeum-validator 2>/dev/null
+    docker stop shardeum-validator 2>/dev/null
+    docker rm shardeum-validator 2>/dev/null
 fi
 
 docker run \
@@ -31,4 +33,4 @@ docker run \
     -v $(pwd)/shardeum:/home/node/config \
     --restart=always \
     --detach \
-    ghcr.io/shardeum/shardeum-validator-${ARCH_TAG}:${TAG}"
+    ghcr.io/shardeum/shardeum-validator-${ARCH_TAG}:${TAG}

@@ -48,4 +48,4 @@ if [ -z "$DASHPASS" ]; then
     exit 1
 fi
 
-docker-safe exec -it shardeum-validator operator-cli gui set password "$DASHPASS"
+docker-safe exec -it shardeum-validator operator-cli gui set password "$DASHPASS" 1>/dev/null

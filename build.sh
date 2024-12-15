@@ -10,6 +10,8 @@ TAG=$1
 ARCH=$(uname -m)
 if [ "$ARCH" == "aarch64" ]; then
     ARCH_TAG="arm64"
+elif [ "$ARCH" == "arm64" ]; then
+    ARCH_TAG="arm64"
 elif [ "$ARCH" == "x86_64" ]; then
     ARCH_TAG="amd64"
 else
@@ -21,8 +23,8 @@ fi
 docker build . \
     --no-cache \
     --build-arg VALIDATOR_BRANCH=it4-1.16.1 \
-    --build-arg CLI_BRANCH=itn4 \
-    --build-arg GUI_BRANCH=itn4 \
+    --build-arg CLI_BRANCH=main \
+    --build-arg GUI_BRANCH=main \
     -t ghcr.io/shardeum/shardeum-validator-${ARCH_TAG}:${TAG}
 
 echo "Build complete: ghcr.io/shardeum/shardeum-validator-${ARCH_TAG}:${TAG}"
