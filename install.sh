@@ -237,7 +237,7 @@ done
 
 
 ## Stop and remove any previous instance of the validator if it exists
-if docker-safe ps --filter "name=shardeum-validator" --format "{{.Names}}" | grep -q "^shardeum-validator$"; then
+if docker-safe ps -a --filter "name=shardeum-validator" --format "{{.Names}}" | grep -q "^shardeum-validator$"; then
     docker-safe stop shardeum-validator 2>/dev/null
     docker-safe rm shardeum-validator 2>/dev/null
 fi
