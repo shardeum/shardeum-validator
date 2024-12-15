@@ -81,7 +81,9 @@ export
 
 ## Copy the shell scripts to the config directory if they don't exist
 #if [ ! -f /home/node/config/set-password.sh ]; then
-cp -f /home/node/app/set-password.sh /home/node/app/shell.sh /home/node/app/operator-cli.sh /home/node/config/
+echo "Copying shell scripts to config directory"
+cp /home/node/app/*.sh /home/node/config/
+ls /home/node/config/
 #fi
 
 

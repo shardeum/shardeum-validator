@@ -29,7 +29,11 @@ docker manifest push ghcr.io/shardeum/shardeum-validator:$TAG
 
 echo "Creating :latest manifest"
 
-docker manifest create --amend ghcr.io/shardeum/shardeum-validator:latest ghcr.io/shardeum/shardeum-validator-arm64:$TAG ghcr.io/shardeum/shardeum-validator-amd64:$TAG
-docker manifest push ghcr.io/shardeum/shardeum-validator:latest
+#docker manifest create --amend ghcr.io/shardeum/shardeum-validator:latest ghcr.io/shardeum/shardeum-validator-arm64:$TAG ghcr.io/shardeum/shardeum-validator-amd64:$TAG
+#docker manifest push ghcr.io/shardeum/shardeum-validator:latest
+
+docker pull ghcr.io/shardeum/shardeum-validator:$TAG
+docker tag ghcr.io/shardeum/shardeum-validator:$TAG ghcr.io/shardeum/shardeum-validator:latest
+docker push ghcr.io/shardeum/shardeum-validator:latest
 
 echo "Done"

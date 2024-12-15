@@ -93,7 +93,7 @@ ENV NPM_CONFIG_loglevel=error
 WORKDIR /usr/src/app
 ENV VALIDATOR_BRANCH=${VALIDATOR_BRANCH}
 RUN git clone https://github.com/shardeum/shardeum.git . && \
-    git switch ${VALIDATOR_BRANCH} && \
+    git checkout ${VALIDATOR_BRANCH} && \
     npm ci && \
     npm run compile
 
@@ -150,7 +150,7 @@ USER node
 WORKDIR /home/node/app
 ENV CLI_BRANCH=${CLI_BRANCH}
 RUN git clone https://github.com/shardeum/validator-cli.git cli && cd cli && \
-    git switch ${CLI_BRANCH} && \
+    git checkout ${CLI_BRANCH} && \
     npm ci && \
     npm run compile
 
@@ -207,7 +207,7 @@ USER node
 WORKDIR /home/node/app
 ENV GUI_BRANCH=${GUI_BRANCH}
 RUN git clone https://github.com/shardeum/validator-gui.git gui && cd gui && \
-    git switch ${GUI_BRANCH} && \
+    git checkout ${GUI_BRANCH} && \
     npm ci && \
     npm run build
 
