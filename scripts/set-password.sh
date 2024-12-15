@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+echo
+
 docker-safe() {
   if ! command -v docker &>/dev/null; then
     echo "docker is not installed on this machine"
@@ -14,6 +16,11 @@ docker-safe() {
 
 
 read_password() {
+  # Clear input buffer to avoid processing leftover inputs
+  stty -icanon min 0 time 0  # Set non-canonical mode temporarily
+  while read -r -t 0; do read -r; done  # Flush buffer
+  stty sane  # Restore terminal to normal mode
+
   local CHARCOUNT=0
   local PASSWORD=""
   while IFS= read -p "$PROMPT" -r -s -n 1 CHAR
@@ -40,7 +47,8 @@ read_password() {
   echo $PASSWORD
 }
 
-echo -n -e "Password requirements: min 8 characters, at least 1 lower case letter, at least 1 upper case letter, at least 1 number, at least 1 special character !@#$%^&*()_+$ \nSet the password to access the Dashboard:"
+echo  "Password requirements: "
+echo -n -e "min 8 characters, at least 1 lower case letter, at least 1 upper case letter, at least 1 number, at least 1 special character !@#$%^&*()_+$ \nSet the password to access the Dashboard:"
 DASHPASS=$(read_password)
 
 if [ -z "$DASHPASS" ]; then
@@ -48,4 +56,4 @@ if [ -z "$DASHPASS" ]; then
     exit 1
 fi
 
-docker-safe exec -it shardeum-validator operator-cli gui set password "$DASHPASS" 1>/dev/null
+docker-safe exec -it shardeum-validator operator-cli gui set password "$DASHPASS" 
