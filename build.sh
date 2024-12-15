@@ -21,6 +21,7 @@ fi
 
 # Build and tag the image
 docker build . \
+    --push \
     --no-cache \
     --build-arg VALIDATOR_BRANCH=it4-1.16.1 \
     --build-arg CLI_BRANCH=main \
