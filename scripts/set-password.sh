@@ -57,3 +57,6 @@ if [ -z "$DASHPASS" ]; then
 fi
 
 docker-safe exec -it shardeum-validator operator-cli gui set password "$DASHPASS" 
+
+echo 
+echo
