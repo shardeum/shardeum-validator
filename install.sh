@@ -6,6 +6,9 @@ Thanks for running a node and helping to make Shardeum better.
 
 By running this installer, you agree to allow the Shardeum team to collect this data. (Y/n)?: " WARNING_AGREE
 
+set -e
+USE_SUDO=0
+
 # Echo user's response, or indicate if no response was provided
 if [ -z "$WARNING_AGREE" ]; then
     echo "No response provided."
@@ -66,9 +69,10 @@ docker-safe() {
     exit 1
   fi
 
-  if ! docker $@; then
+  if ! docker "$@"; then
     echo "Trying again with sudo..." >&2
-    sudo docker $@
+    USE_SUDO=1
+    sudo docker "$@"
   fi
 }
 
@@ -238,14 +242,23 @@ done
 
 ## Stop and remove any previous instance of the validator if it exists
 if docker-safe ps -a --filter "name=shardeum-validator" --format "{{.Names}}" | grep -q "^shardeum-validator$"; then
+    echo "Stopping and removing previous instance of shardeum-validator"
     docker-safe stop shardeum-validator 2>/dev/null
     docker-safe rm shardeum-validator 2>/dev/null
 fi
 
-## Make sure the node user can access and write to the shared directory if this script is run as root
+## Make sure the node user can access and write to the shared directory if this script is run as root or if docker is sudo'd
 if [ "$(id -u)" -eq 0 ]; then
-    mkdir -p ${NODEHOME} 2>/dev/null
-    chown 1000:1000 ${NODEHOME} 2>/dev/null
+  set +e
+  mkdir -p ${NODEHOME} 
+  chown 1000:1000 ${NODEHOME}
+  set -e
+fi
+if [ $USE_SUDO -eq 1 ]; then
+  set +e
+  sudo mkdir -p ${NODEHOME} 
+  sudo chown 1000:1000 ${NODEHOME}
+  set -e  
 fi
 
 echo "Downloading the shardeum-validator image and starting the validator container"
@@ -288,4 +301,5 @@ done
 echo "Enter a new password for the validator dashboard"
 "${NODEHOME}/set-password.sh"
 
-echo "Shardeum Validator is now running. You can access the dashboard at http://${EXTERNALIP}:${DASHPORT}"
+echo "Shardeum Validator is now running. You can access the dashboard at https://${EXT_IP}:${DASHPORT}/"
+echo "If you're running the validator on your local system you can access the dashboard at https://localhost:${DASHPORT}/ instead"
