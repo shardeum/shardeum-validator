@@ -247,19 +247,34 @@ if docker-safe ps -a --filter "name=shardeum-validator" --format "{{.Names}}" | 
     docker-safe rm shardeum-validator 2>/dev/null
 fi
 
-## Make sure the node user can access and write to the shared directory if this script is run as root or if docker is sudo'd
-if [ "$(id -u)" -eq 0 ]; then
-  set +e
-  mkdir -p ${NODEHOME} 
-  chown 1000:1000 ${NODEHOME}
-  set -e
+## Ensure that the node user can write to the $NODEHOME directory inside of the container, to do so the directory must be owned by UID 1000
+set +e
+mkdir -p ${NODEHOME} 
+
+# Get the owner UID of the directory
+OWNER_UID=$(stat -c '%u' "$NODEHOME")
+# UID of the node user in the docker image
+TARGET_UID=1000
+
+# Check if the owner UID is not the target UID
+if [ "$OWNER_UID" -ne "$TARGET_UID" ]; then
+  echo "Changing ownership of $NODEHOME to UID $TARGET_UID..."
+  # Attempt to change ownership
+  if chown "$TARGET_UID" "$NODEHOME"; then
+    echo "Ownership of $NODEHOME changed successfully."
+  else
+    echo "Failed to change ownership. Retrying with sudo..."
+    if sudo chown "$TARGET_UID" "$NODEHOME"; then
+      echo "Ownership of $NODEHOME changed successfully with sudo."
+    else
+      echo "Failed to change ownership of $NODEHOME even with sudo."
+      exit 1
+    fi
+  fi
+else
+  echo "Ownership of $NODEHOME is already UID $TARGET_UID. No changes needed."
 fi
-if [ $USE_SUDO -eq 1 ]; then
-  set +e
-  sudo mkdir -p ${NODEHOME} 
-  sudo chown 1000:1000 ${NODEHOME}
-  set -e  
-fi
+set -e
 
 echo "Downloading the shardeum-validator image and starting the validator container"
 
