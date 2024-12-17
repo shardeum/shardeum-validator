@@ -246,7 +246,7 @@ OLD_IMAGE="ghcr.io/shardeum/server:latest"
 CONTAINER_IDS=$(docker-safe ps -aq --filter "ancestor=$OLD_IMAGE")
 if [ -z "$CONTAINER_IDS" ]; then
   echo "No deprecated containers found. Proceeding with the installation."
-elif
+else
   set +e
   echo "Stopping and removing the following containers: $CONTAINER_IDS"
   # Stop all matching containers
