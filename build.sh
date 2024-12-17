@@ -23,9 +23,9 @@ fi
 docker build . \
     --push \
     --no-cache \
-    --build-arg VALIDATOR_BRANCH=it4-1.16.1 \
-    --build-arg CLI_BRANCH=main \
-    --build-arg GUI_BRANCH=main \
+    --build-arg VALIDATOR_BRANCH=itn4 \
+    --build-arg CLI_BRANCH=itn4 \
+    --build-arg GUI_BRANCH=itn4 \
     -t ghcr.io/shardeum/shardeum-validator-${ARCH_TAG}:${TAG}
 
 echo "Build complete: ghcr.io/shardeum/shardeum-validator-${ARCH_TAG}:${TAG}"
