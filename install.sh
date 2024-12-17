@@ -240,7 +240,24 @@ while :; do
 done
 
 
-## Stop and remove any previous instance of the validator if it exists
+
+# Find all container IDs (running or stopped) that use the pre-ITN4 installer image
+OLD_IMAGE="ghcr.io/shardeum/server:latest"
+CONTAINER_IDS=$(docker-safe ps -aq --filter "ancestor=$OLD_IMAGE")
+if [ -z "$CONTAINER_IDS" ]; then
+  echo "No deprecated containers found. Proceeding with the installation."
+elif
+  set +e
+  echo "Stopping and removing the following containers: $CONTAINER_IDS"
+  # Stop all matching containers
+  docker-safe stop $CONTAINER_IDS 1>/dev/null
+  # Remove all matching containers
+  docker-safe rm $CONTAINER_IDS 1>/dev/null
+  echo "Containers have been stopped and removed successfully."
+  set -e
+fi
+
+## Stop and remove any previous instance of the shardeum-validator if it exists
 if docker-safe ps -a --filter "name=shardeum-validator" --format "{{.Names}}" | grep -q "^shardeum-validator$"; then
     echo "Stopping and removing previous instance of shardeum-validator"
     docker-safe stop shardeum-validator 2>/dev/null
