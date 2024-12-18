@@ -264,7 +264,7 @@ ENV nodesPerConsensusGroup=$nodesPerConsensusGroup
 ENV maxNodes=$maxNodes
 
 RUN apt-get update
-RUN apt-get install -y logrotate iproute2 nano git openssl curl && \
+RUN apt-get install -y logrotate iproute2 nano git openssl curl procps && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
