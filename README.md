@@ -41,11 +41,15 @@ docker run \
     -e SHMINT=11001 \
     -e SHMEXT=12002 \
     -e DASHPORT=10080 \
-    -v $(pwd)/shardeum:/home/node/config \
+    -v $(pwd)/shardeum-2:/home/node/config \
     --restart=always \
     --detach \
     ghcr.io/shardeum/shardeum-validator
 ```
+
+### Important 
+If you run this as root, create and `chown 1000:1000 shardeum-2` the folder specified before running as the node user in the docker process needs to be able to write to it
+
 
 These are the environment variables used by the validator:
 
