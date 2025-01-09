@@ -1,9 +1,27 @@
 name: Build Docker Images
 
 on:
-  push:
-    tags:
-      - '*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag for the Docker images'
+        required: true
+        type: string
+      validator_branch:
+        description: 'Validator branch to use'
+        required: true
+        default: 'itn4-1.16.3'
+        type: string
+      cli_branch:
+        description: 'CLI branch to use'
+        required: true
+        default: 'itn4'
+        type: string
+      gui_branch:
+        description: 'GUI branch to use'
+        required: true
+        default: 'itn4'
+        type: string
 
 jobs:
   build:
@@ -31,7 +49,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Extract tag name
-        run: echo "TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+        run: echo "TAG=${{ inputs.tag }}" >> $GITHUB_ENV
       
       - name: Build and push
         uses: docker/build-push-action@v4
@@ -40,9 +58,9 @@ jobs:
           push: true
           tags: ghcr.io/shardeum/shardeum-validator-${{ matrix.arch }}:${{ env.TAG }}
           build-args: |
-            VALIDATOR_BRANCH=itn4-1.16.3
-            CLI_BRANCH=itn4
-            GUI_BRANCH=itn4
+            VALIDATOR_BRANCH=${{ inputs.validator_branch }}
+            CLI_BRANCH=${{ inputs.cli_branch }}
+            GUI_BRANCH=${{ inputs.gui_branch }}
 
   create-manifest:
     needs: build
@@ -56,7 +74,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
           
       - name: Extract tag name
-        run: echo "TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+        run: echo "TAG=${{ inputs.tag }}" >> $GITHUB_ENV
       
       - name: Create and push manifest
         run: |
