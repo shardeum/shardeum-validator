@@ -48,15 +48,12 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       
-      - name: Extract tag name
-        run: echo "TAG=${{ inputs.tag }}" >> $GITHUB_ENV
-      
       - name: Build and push
         uses: docker/build-push-action@v4
         with:
           context: .
           push: true
-          tags: ghcr.io/shardeum/shardeum-validator-${{ matrix.arch }}:${{ env.TAG }}
+          tags: ghcr.io/shardeum/shardeum-validator-${{ matrix.arch }}:${{ inputs.tag }}
           build-args: |
             VALIDATOR_BRANCH=${{ inputs.validator_branch }}
             CLI_BRANCH=${{ inputs.cli_branch }}
@@ -73,12 +70,9 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
           
-      - name: Extract tag name
-        run: echo "TAG=${{ inputs.tag }}" >> $GITHUB_ENV
-      
       - name: Create and push manifest
         run: |
-          docker manifest create ghcr.io/shardeum/shardeum-validator:${{ env.TAG }} \
-            ghcr.io/shardeum/shardeum-validator-amd64:${{ env.TAG }} \
-            ghcr.io/shardeum/shardeum-validator-arm64:${{ env.TAG }}
-          docker manifest push ghcr.io/shardeum/shardeum-validator:${{ env.TAG }} 
+          docker manifest create ghcr.io/shardeum/shardeum-validator:${{ inputs.tag }} \
+            ghcr.io/shardeum/shardeum-validator-amd64:${{ inputs.tag }} \
+            ghcr.io/shardeum/shardeum-validator-arm64:${{ inputs.tag }}
+          docker manifest push ghcr.io/shardeum/shardeum-validator:${{ inputs.tag }} 
