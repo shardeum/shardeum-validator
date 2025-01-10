@@ -37,7 +37,7 @@ jobs:
           - arch: amd64
             runner: ubuntu-latest
           - arch: arm64
-            runner: arm64-latest
+            runner: arm-utils
     runs-on: ${{ matrix.runner }}
     
     steps:
