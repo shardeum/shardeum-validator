@@ -1,5 +1,10 @@
 name: Build Docker Images
 
+# Add permissions configuration
+permissions:
+  contents: read
+  packages: write
+
 on:
   workflow_dispatch:
     inputs:
