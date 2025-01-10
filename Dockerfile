@@ -286,7 +286,6 @@ COPY --from=gui --chown=node:node    /home/node/app/gui /home/node/app/gui
 ## Misc scripts
 COPY --chown=node:node                  entrypoint.sh      /home/node/app/
 COPY --chown=node:node                  scripts/*.sh       /home/node/app/
-COPY --chown=node:node                  scripts/*.js       /home/node/app/
 
 ## Map the GUIs certificates to the config directory, these will be broken links until the first time entry.sh is run & they'e auto-generated
 RUN cd /home/node/app/gui && \
