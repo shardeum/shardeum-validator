@@ -48,7 +48,8 @@ docker run \
 ```
 
 ### Important 
-If you run this as root, create and `chown 1000:1000 shardeum-2` the folder specified before running as the node user in the docker process needs to be able to write to it
+If you run this as root, create and `chown 1000:1000 shardeum-2` the folder specified before running as the node user in the docker process needs to be able to write to it.
+If you dont have permissions to change the owner, change the permissions instead: `chmod -R 777 shardeum-2`
 
 
 These are the environment variables used by the validator:
