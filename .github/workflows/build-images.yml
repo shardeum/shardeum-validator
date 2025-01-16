@@ -35,7 +35,7 @@ jobs:
         arch: [amd64, arm64]
         include:
           - arch: amd64
-            runner: ubuntu-latest
+            runner: [self-hosted, Linux, X64]
           - arch: arm64
             runner: [self-hosted, Linux, ARM64]
     runs-on: ${{ matrix.runner }}
