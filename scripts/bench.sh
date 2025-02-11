@@ -7,7 +7,7 @@ log_output() {
 
 # Method to ensure logs directory exists
 setup_output_directory() {
-    BENCHMARK_LOG="/home/node/app/logs/benchmark.log"
+    BENCHMARK_LOG="/home/node/app/cli/build/logs/benchmark.log"
     if [ ! -f "$BENCHMARK_LOG" ]; then
         log_output "Benchmark log file not found. Creating file..."
         touch "$BENCHMARK_LOG"
