@@ -5,13 +5,13 @@ permissions:
   contents: read
   packages: write
 
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
 on:
   workflow_dispatch:
     inputs:
-      tag:
-        description: 'Tag for the Docker images'
-        required: true
-        type: string
       validator_branch:
         description: 'Validator branch to use'
         required: true
@@ -26,6 +26,10 @@ on:
         description: 'GUI branch to use'
         required: true
         default: 'itn4'
+        type: string
+      tag:
+        description: 'Tag for the Docker images'
+        required: true
         type: string
 
 jobs:
@@ -43,27 +47,30 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-      
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
         with:
-          registry: ghcr.io
+          registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      
-      - name: Build and push
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          push: true
-          tags: ghcr.io/shardeum/shardeum-validator-${{ matrix.arch }}:${{ inputs.tag }}
-          build-args: |
-            VALIDATOR_BRANCH=${{ inputs.validator_branch }}
-            CLI_BRANCH=${{ inputs.cli_branch }}
-            GUI_BRANCH=${{ inputs.gui_branch }}
 
+      - name: Build Docker image
+        run: |
+          docker build \
+            --no-cache \
+            --platform linux/${{ matrix.arch }} \
+            --build-arg VALIDATOR_BRANCH=${{ inputs.validator_branch }} \
+            --build-arg CLI_BRANCH=${{ inputs.cli_branch }} \
+            --build-arg GUI_BRANCH=${{ inputs.gui_branch }} \
+            -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-${{ matrix.arch }}:${{ inputs.tag }} \
+            .
+
+      - name: Push Docker image and cleanup
+        run: |
+          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-${{ matrix.arch }}:${{ inputs.tag }}
+          # Remove the image after pushing
+          docker rmi ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-${{ matrix.arch }}:${{ inputs.tag }}
+          
   create-manifest:
     needs: build
     runs-on: ubuntu-latest
@@ -71,13 +78,13 @@ jobs:
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
         with:
-          registry: ghcr.io
+          registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
           
       - name: Create and push manifest
         run: |
-          docker manifest create ghcr.io/shardeum/shardeum-validator:${{ inputs.tag }} \
-            ghcr.io/shardeum/shardeum-validator-amd64:${{ inputs.tag }} \
-            ghcr.io/shardeum/shardeum-validator-arm64:${{ inputs.tag }}
-          docker manifest push ghcr.io/shardeum/shardeum-validator:${{ inputs.tag }} 
+          docker manifest create ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ inputs.tag }} \
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-amd64:${{ inputs.tag }} \
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-arm64:${{ inputs.tag }}
+          docker manifest push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ inputs.tag }} 
