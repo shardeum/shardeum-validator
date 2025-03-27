@@ -15,17 +15,17 @@ on:
       validator_branch:
         description: 'Validator branch to use'
         required: true
-        default: 'itn4-1.16.3'
+        default: 'mainnet-launch'
         type: string
       cli_branch:
         description: 'CLI branch to use'
         required: true
-        default: 'itn4'
+        default: 'mainnet-launch'
         type: string
       gui_branch:
         description: 'GUI branch to use'
         required: true
-        default: 'itn4'
+        default: 'mainnet-launch'
         type: string
       tag:
         description: 'Tag for the Docker images'

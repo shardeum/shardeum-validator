@@ -2,16 +2,16 @@
 # Set the branch to build from the command line with --build-arg, for example:
 # $ docker build --build-arg VALIDATOR_BRANCH=itn4 .
 ###################################################################################
-ARG VALIDATOR_BRANCH="itn4"
-ARG CLI_BRANCH="itn4"
-ARG GUI_BRANCH="itn4"
+ARG VALIDATOR_BRANCH="mainnet-launch"
+ARG CLI_BRANCH="mainnet-launch"
+ARG GUI_BRANCH="mainnet-launch"
 
 ## Network details
-ARG APP_MONITOR="34.28.123.3"
-ARG RPC_SERVER_URL="http://34.42.232.167:8000 "
-ARG EXISTING_ARCHIVERS='[{"ip":"35.193.191.159","port":4000,"publicKey":"1c63734aedef5665d6cf02d3a79ae30aedcbd27eae3b76fff05d587a6ac62981"},{"ip":"34.73.94.45","port":4000,"publicKey":"11086314ccf8642906b99f09cf3ae9a13370c57106653cd28fc1a9eee2560b64"},{"ip":"34.19.93.147","port":4000,"publicKey":"b09a8792593682cbffbbf2fc3bd812d8143740197a5f435c77a38740397088ac"}]'
-ARG NEXT_PUBLIC_RPC_URL="http://34.42.232.167:8000 "
-ARG NEXT_EXPLORER_URL="http://35.238.111.77:6001"
+ARG APP_MONITOR="34.56.47.170"
+ARG RPC_SERVER_URL="http://34.60.100.120:8000"
+ARG EXISTING_ARCHIVERS='[{"ip":"104.197.117.164","port":4000,"publicKey":"d831bb7c09db45d47338af23ab50cac5d29ef8f3a2cd274dd741370aa472d6c1"},{"ip":"34.139.3.222","port":4000,"publicKey":"1c42a7f9cca36e13e590ae00c1124c5a1f696c879da210ffcdccb312d08c8214"},{"ip":"35.233.192.167","port":4000,"publicKey":"d1721c924394ae1ff3e9ea22af15962e045511fde05ed0b56f0a8c36eb161d75"}]'
+ARG NEXT_PUBLIC_RPC_URL="http://34.60.100.120:8000 "
+ARG NEXT_EXPLORER_URL="http://34.136.118.2:6001"
 ARG SHMEXT=9001
 ARG SHMINT=10001
 ARG DASHPORT=8080
