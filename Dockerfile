@@ -20,6 +20,7 @@ ARG INT_IP="auto"
 ARG LOCALLANIP="auto"
 ARG EXT_IP="auto"
 ARG SERVERIP="auto"
+ARG CHAIN_ID=8083
 
 ## These should not be changed often or easily without thourough testing
 ## 6 Gigabytes of memory for the node process for the validator to deal with the large amount of data it has to be able to handle
@@ -55,6 +56,7 @@ ARG EXT_IP
 ARG LOCALLANIP
 ARG SERVERIP
 ARG NODE_OPTIONS
+ARG CHAIN_ID
 
 ## Inherit the ARGs from the to level and expose them in the final image
 ENV APP_MONITOR=$APP_MONITOR
@@ -71,6 +73,7 @@ ENV EXT_IP=$EXT_IP
 ENV LOCALLANIP=$LOCALLANIP
 ENV SERVERIP=$SERVERIP
 ENV NODE_OPTIONS=$NODE_OPTIONS
+ENV CHAIN_ID=$CHAIN_ID
 
 # Install build dependencies
 RUN apt-get update && apt-get install -y \
@@ -120,6 +123,7 @@ ARG EXT_IP
 ARG LOCALLANIP
 ARG SERVERIP
 ARG NODE_OPTIONS
+ARG CHAIN_ID
 
 ## Inherit the ARGs from the to level and expose them in the final image
 ENV APP_MONITOR=$APP_MONITOR
@@ -137,6 +141,7 @@ ENV LOCALLANIP=$LOCALLANIP
 ENV SERVERIP=$SERVERIP
 ENV NODE_OPTIONS=$NODE_OPTIONS
 ENV NPM_CONFIG_loglevel=error
+ENV CHAIN_ID=$CHAIN_ID
 
 # Install build dependencies
 RUN apt-get update && apt-get install -y \
@@ -178,6 +183,7 @@ ARG EXT_IP
 ARG LOCALLANIP
 ARG SERVERIP
 ARG NODE_OPTIONS
+ARG CHAIN_ID
 
 ## Inherit the ARGs from the to level and expose them in the final image
 ENV APP_MONITOR=$APP_MONITOR
@@ -195,6 +201,7 @@ ENV LOCALLANIP=$LOCALLANIP
 ENV SERVERIP=$SERVERIP
 ENV NODE_OPTIONS=$NODE_OPTIONS
 ENV NPM_CONFIG_loglevel=error
+ENV CHAIN_ID=$CHAIN_ID
 
 # Install build dependencies
 RUN apt-get update && apt-get install -y \
@@ -242,6 +249,7 @@ ARG minNodes
 ARG baselineNodes
 ARG nodesPerConsensusGroup
 ARG maxNodes
+ARG CHAIN_ID
 
 ## Inherit the ARGs from the to level and expose them in the final image
 ENV APP_MONITOR=$APP_MONITOR
@@ -262,6 +270,7 @@ ENV minNodes=$minNodes
 ENV baselineNodes=$baselineNodes
 ENV nodesPerConsensusGroup=$nodesPerConsensusGroup
 ENV maxNodes=$maxNodes
+ENV CHAIN_ID=$CHAIN_ID
 
 RUN apt-get update
 RUN apt-get install -y logrotate iproute2 nano git openssl curl procps && \
