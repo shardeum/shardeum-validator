@@ -54,11 +54,14 @@ If you run this as root, create and `chown 1000:1000 shardeum-2` the folder spec
 These are the environment variables used by the validator:
 
 ```bash
-APP_MONITOR RPC_SERVER_URL EXISTING_ARCHIVERS NEXT_PUBLIC_RPC_URL NEXT_EXPLORER_URL INT_IP SHMINT SHMEXT DASHPORT RUNDASHBOARD EXT_IP SERVERIP LOCALLANIP
+APP_MONITOR RPC_SERVER_URL EXISTING_ARCHIVERS NEXT_PUBLIC_RPC_URL NEXT_EXPLORER_URL INT_IP SHMINT SHMEXT DASHPORT RUNDASHBOARD EXT_IP SERVERIP LOCALLANIP NEXT_PUBLIC_CHAIN_ID
 ```
 
 So you could, for example, run the validator without starting the dashboard by specifying `-e RUNDASHBOARD=n` in the docker run command.
 
+# Chain ID
+
+To build the image for the test net use `-e NEXT_PUBLIC_CHAIN_ID=8083` for main net use `-e NEXT_PUBLIC_CHAIN_ID=8118`
 
 # Running the validator on other networks
 
