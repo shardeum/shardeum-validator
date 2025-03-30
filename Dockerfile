@@ -5,7 +5,7 @@
 ARG VALIDATOR_BRANCH="mainnet-launch"
 ARG CLI_BRANCH="mainnet-launch"
 ARG GUI_BRANCH="mainnet-launch"
-ARG NEXT_PUBLIC_CHAIN_ID="8083"
+ARG CHAIN_ID="8083"
 
 ## Network details
 ARG APP_MONITOR="34.56.47.170"
@@ -21,14 +21,15 @@ ARG INT_IP="auto"
 ARG LOCALLANIP="auto"
 ARG EXT_IP="auto"
 ARG SERVERIP="auto"
+ARG NEXT_PUBLIC_CHAIN_ID
 
 ## These should not be changed often or easily without thourough testing
 ## 6 Gigabytes of memory for the node process for the validator to deal with the large amount of data it has to be able to handle
 ARG NODE_OPTIONS="--max-old-space-size=6144"
-ARG minNodes=1280
-ARG baselineNodes=1280
+ARG minNodes=256
+ARG baselineNodes=256
 ARG nodesPerConsensusGroup=128
-ARG maxNodes=1500
+ARG maxNodes=1280
 
 ## Define what Docker Node version image to use for the build & final image
 ARG NODE_VERSION=18.19.1
@@ -57,6 +58,7 @@ ARG LOCALLANIP
 ARG SERVERIP
 ARG NODE_OPTIONS
 ARG NEXT_PUBLIC_CHAIN_ID
+ARG CHAIN_ID
 
 ## Inherit the ARGs from the to level and expose them in the final image
 ENV APP_MONITOR=$APP_MONITOR
@@ -73,7 +75,8 @@ ENV EXT_IP=$EXT_IP
 ENV LOCALLANIP=$LOCALLANIP
 ENV SERVERIP=$SERVERIP
 ENV NODE_OPTIONS=$NODE_OPTIONS
-ENV NEXT_PUBLIC_CHAIN_ID=$NEXT_PUBLIC_CHAIN_ID
+ENV NEXT_PUBLIC_CHAIN_ID=$CHAIN_ID
+ENV CHAIN_ID=$CHAIN_ID
 
 # Install build dependencies
 RUN apt-get update && apt-get install -y \
@@ -124,6 +127,7 @@ ARG LOCALLANIP
 ARG SERVERIP
 ARG NODE_OPTIONS
 ARG NEXT_PUBLIC_CHAIN_ID
+ARG CHAIN_ID
 
 ## Inherit the ARGs from the to level and expose them in the final image
 ENV APP_MONITOR=$APP_MONITOR
@@ -141,7 +145,8 @@ ENV LOCALLANIP=$LOCALLANIP
 ENV SERVERIP=$SERVERIP
 ENV NODE_OPTIONS=$NODE_OPTIONS
 ENV NPM_CONFIG_loglevel=error
-ENV NEXT_PUBLIC_CHAIN_ID=$NEXT_PUBLIC_CHAIN_ID
+ENV NEXT_PUBLIC_CHAIN_ID=$CHAIN_ID
+ENV CHAIN_ID=$CHAIN_ID
 
 # Install build dependencies
 RUN apt-get update && apt-get install -y \
@@ -184,6 +189,7 @@ ARG LOCALLANIP
 ARG SERVERIP
 ARG NODE_OPTIONS
 ARG NEXT_PUBLIC_CHAIN_ID
+ARG CHAIN_ID
 
 ## Inherit the ARGs from the to level and expose them in the final image
 ENV APP_MONITOR=$APP_MONITOR
@@ -201,7 +207,8 @@ ENV LOCALLANIP=$LOCALLANIP
 ENV SERVERIP=$SERVERIP
 ENV NODE_OPTIONS=$NODE_OPTIONS
 ENV NPM_CONFIG_loglevel=error
-ENV NEXT_PUBLIC_CHAIN_ID=$NEXT_PUBLIC_CHAIN_ID
+ENV NEXT_PUBLIC_CHAIN_ID=$CHAIN_ID
+ENV CHAIN_ID=$CHAIN_ID
 
 # Install build dependencies
 RUN apt-get update && apt-get install -y \
@@ -250,6 +257,7 @@ ARG baselineNodes
 ARG nodesPerConsensusGroup
 ARG maxNodes
 ARG NEXT_PUBLIC_CHAIN_ID
+ARG CHAIN_ID
 
 ## Inherit the ARGs from the to level and expose them in the final image
 ENV APP_MONITOR=$APP_MONITOR
@@ -270,7 +278,8 @@ ENV minNodes=$minNodes
 ENV baselineNodes=$baselineNodes
 ENV nodesPerConsensusGroup=$nodesPerConsensusGroup
 ENV maxNodes=$maxNodes
-ENV NEXT_PUBLIC_CHAIN_ID=$NEXT_PUBLIC_CHAIN_ID
+ENV NEXT_PUBLIC_CHAIN_ID=$CHAIN_ID
+ENV CHAIN_ID=$CHAIN_ID
 
 RUN apt-get update
 RUN apt-get install -y logrotate iproute2 nano git openssl curl procps && \
