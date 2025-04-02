@@ -2,16 +2,17 @@
 
 set -e
 
-# Check if network name, tag, and arch_tag are provided
-if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ]; then
-  echo "Usage: $0 <network_name> <tag> <arch_tag>"
-  echo "Example: $0 testnet v1.0.0 amd64"
+# Check if network name, tag, arch_tag, and registry are provided
+if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ] || [ -z "$4" ]; then
+  echo "Usage: $0 <network_name> <tag> <arch_tag> <registry>"
+  echo "Example: $0 testnet v1.0.0 amd64 ghcr.io"
   exit 1
 fi
 
 NETWORK_NAME=$1
 TAG=$2
 ARCH_TAG=$3
+REGISTRY=$4 # Use the fourth argument as the registry
 CONFIG_FILE="scripts/configs/${NETWORK_NAME}.sh"
 
 # Check if config file exists
@@ -27,13 +28,14 @@ set -a
 source "$CONFIG_FILE"
 set +a
 
-# Define image name
-IMAGE_NAME="ghcr.io/shardeum/shardeum-validator-${ARCH_TAG}:${TAG}"
+# Define image name using registry argument
+IMAGE_NAME="${REGISTRY}/shardeum/shardeum-validator-${ARCH_TAG}:${NETWORK_NAME}-${TAG}"
 
-echo "Building image: ${IMAGE_NAME}"
+echo "Building image: ${IMAGE_NAME} for network ${NETWORK_NAME}"
 
 # Execute the build command directly substituting shell variables
 docker build . \
+    --no-cache \
     --build-arg NETWORK="${NETWORK_NAME}" \
     --build-arg VALIDATOR_BRANCH="${VALIDATOR_BRANCH}" \
     --build-arg CLI_BRANCH="${CLI_BRANCH}" \
