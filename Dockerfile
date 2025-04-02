@@ -2,7 +2,18 @@
 # Set the branch to build from the command line with --build-arg, for example:
 # $ docker build --build-arg VALIDATOR_BRANCH=itn4 .
 ###################################################################################
+
+ARG VALIDATOR_BRANCH
+ARG CLI_BRANCH
+ARG GUI_BRANCH
 ARG CHAIN_ID
+
+## Network details
+ARG APP_MONITOR
+ARG RPC_SERVER_URL
+ARG EXISTING_ARCHIVERS
+ARG NEXT_PUBLIC_RPC_URL
+ARG NEXT_PUBLIC_EXPLORER_URL
 ARG SHMEXT=9001
 ARG SHMINT=10001
 ARG DASHPORT=8080
