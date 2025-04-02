@@ -45,7 +45,6 @@ jobs:
   build:
     if: ${{ inputs.tag != 'latest' }}
     strategy:
-      fail-fast: false # Allow other matrix jobs to continue if one fails
       matrix:
         arch: [amd64, arm64]
         include:
