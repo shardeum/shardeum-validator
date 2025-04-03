@@ -12,6 +12,15 @@ env:
 on:
   workflow_dispatch:
     inputs:
+      network:
+        description: 'Network to build for'
+        required: true
+        type: choice
+        options:
+          - mainnet
+          - stagenet
+          - testnet
+        default: 'testnet'
       validator_branch:
         description: 'Validator branch to use'
         required: true
@@ -55,22 +64,19 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build Docker image
+      - name: Build Docker image using script
         run: |
-          docker build \
-            --no-cache \
-            --platform linux/${{ matrix.arch }} \
-            --build-arg VALIDATOR_BRANCH=${{ inputs.validator_branch }} \
-            --build-arg CLI_BRANCH=${{ inputs.cli_branch }} \
-            --build-arg GUI_BRANCH=${{ inputs.gui_branch }} \
-            -t ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-${{ matrix.arch }}:${{ inputs.tag }} \
-            .
+          ./scripts/build-network.sh ${{ inputs.network }} ${{ inputs.tag }} ${{ matrix.arch }} ${{ env.REGISTRY }}
 
       - name: Push Docker image and cleanup
         run: |
-          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-${{ matrix.arch }}:${{ inputs.tag }}
+          # Construct the image name exactly as the script does
+          IMAGE_NAME_FULL="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-${{ matrix.arch }}:${{ inputs.network }}-${{ inputs.tag }}"
+          echo "Pushing: $IMAGE_NAME_FULL"
+          docker push "$IMAGE_NAME_FULL"
           # Remove the image after pushing
-          docker rmi ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-${{ matrix.arch }}:${{ inputs.tag }}
+          echo "Removing: $IMAGE_NAME_FULL"
+          docker rmi "$IMAGE_NAME_FULL"
           
   create-manifest:
     needs: build
@@ -84,9 +90,14 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
           
-      - name: Create and push manifest
+      - name: Create and push manifest per network
         run: |
-          docker manifest create ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ inputs.tag }} \
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-amd64:${{ inputs.tag }} \
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-arm64:${{ inputs.tag }}
-          docker manifest push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ inputs.tag }} 
+          MANIFEST_NAME="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ inputs.network }}-${{ inputs.tag }}"
+          IMG_AMD64="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-amd64:${{ inputs.network }}-${{ inputs.tag }}"
+          IMG_ARM64="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-arm64:${{ inputs.network }}-${{ inputs.tag }}"
+          echo "Creating manifest: $MANIFEST_NAME from $IMG_AMD64 and $IMG_ARM64"
+          docker manifest create "$MANIFEST_NAME" \
+            "$IMG_AMD64" \
+            "$IMG_ARM64"
+          echo "Pushing manifest: $MANIFEST_NAME"
+          docker manifest push "$MANIFEST_NAME" 
