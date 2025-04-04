@@ -123,32 +123,28 @@ The example in `build.sh` will build the `mainnet-launch` branch of the validato
 ## Changing network settings
 
 
-The defaults used by the build are specified in the Dockerfile, this includes the archivers, explorer, rpc and monitor. Make sure to update these for the current network before building:
-https://github.com/shardeum/shardeum-validator/blob/dev/Dockerfile
+The defaults used by the build are specified in the `scripts/build-network.sh`, this includes the archivers, explorer, rpc and monitor. You can customize these in a custom build using `build.sh`. Make sure to update the default environment variables before building:
+https://github.com/shardeum/shardeum-validator/blob/dev/build.sh
 
 ```
-## Network details
-ARG APP_MONITOR="34.28.123.3"
-ARG RPC_SERVER_URL="http://34.42.232.167:8000 "
-ARG EXISTING_ARCHIVERS='[{"ip":"35.193.191.159","port":4000,"publicKey":"1c63734aedef5665d6cf02d3a79ae30aedcbd27eae3b76fff05d587a6ac62981"},{"ip":"34.73.94.45","port":4000,"publicKey":"11086314ccf8642906b99f09cf3ae9a13370c57106653cd28fc1a9eee2560b64"},{"ip":"34.19.93.147","port":4000,"publicKey":"b09a8792593682cbffbbf2fc3bd812d8143740197a5f435c77a38740397088ac"}]'
-ARG NEXT_PUBLIC_RPC_URL="http://34.42.232.167:8000 "
-ARG NEXT_PUBLIC_EXPLORER_URL="http://35.238.111.77:6001"
-ARG SHMEXT=9001
-ARG SHMINT=10001
-ARG DASHPORT=8080
-ARG RUNDASHBOARD="y"
-ARG INT_IP="auto"
-ARG LOCALLANIP="auto"
-ARG EXT_IP="auto"
-ARG SERVERIP="auto"
-
-## These should not be changed often or easily without thourough testing
-## 6 Gigabytes of memory for the node process for the validator to deal with the large amount of data it has to be able to handle
-ARG NODE_OPTIONS="--max-old-space-size=6144"
-ARG minNodes=1280
-ARG baselineNodes=1280
-ARG nodesPerConsensusGroup=128
-ARG maxNodes=1500
+# Required Environment Variables (values here are from stagenet)
+CHAIN_ID=8081
+NEXT_PUBLIC_CHAIN_ID=${CHAIN_ID}
+APP_MONITOR="34.16.2.42"
+RPC_SERVER_URL="https://api-stagenet.shardeum.org"
+EXISTING_ARCHIVERS='[{"ip":"34.57.177.170","port":4000,"publicKey":"d831bb7c09db45d47338af23ab50cac5d29ef8f3a2cd274dd741370aa472d6c1"},{"ip":"34.73.104.156","port":4000,"publicKey":"37d162292c068030bbde55ee8ac777ad08f443b9bba0b0064e4919345d43727a"},{"ip":"35.230.76.119","port":4000,"publicKey":"d8475a2d2110becb2d031085a2915956239dafcafd2d57f5468a187bb7235dd7"}]'
+NEXT_PUBLIC_RPC_URL="https://api-stagenet.shardeum.org"
+NEXT_PUBLIC_EXPLORER_URL="https://explorer-stagenet.shardeum.org"
+minNodes=360
+baselineNodes=360
+nodesPerConsensusGroup=128
+maxNodes=1280
+enableProblematicNodeRemoval=true
+enableProblematicNodeRemovalOnCycle=0
+flexibleRotationDelta=4
+VALIDATOR_BRANCH=mainnet-launch
+CLI_BRANCH=mainnet-launch
+GUI_BRANCH=mainnet-launch
 ```
 
 ## Building
