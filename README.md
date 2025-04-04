@@ -190,3 +190,33 @@ Once it's completed the latest build is available in https://github.com/shardeum
 ```
 docker pull ghcr.io/shardeum/shardeum-validator:latest
 ```
+
+
+### Github Actions building
+
+The github actions builds using `build-network.sh`. It can be configured ONLY for `testnet`, `stagenet`, and `mainnet`. If you want to make a custom network build you can use `build.sh` with your own environment variables. You can see them all enumerated in `build-network.sh`.
+
+#### Tagging Structure
+
+```
+ghcr.io/shardeum/shardeum-validator:{environment}-{your tag}
+```
+
+expanded: 
+```
+ghcr.io/shardeum/shardeum-validator:mainnet-{your tag}
+ghcr.io/shardeum/shardeum-validator-amd64:mainnet-{your tag}
+ghcr.io/shardeum/shardeum-validator-arm64:mainnet-{your tag}
+
+ghcr.io/shardeum/shardeum-validator:stagenet-{your tag}
+ghcr.io/shardeum/shardeum-validator-amd64:stagenet-{your tag}
+ghcr.io/shardeum/shardeum-validator-arm64:stagenet-{your tag}
+
+ghcr.io/shardeum/shardeum-validator:testnet-{your tag}
+ghcr.io/shardeum/shardeum-validator-amd64:testnet-{your tag}
+ghcr.io/shardeum/shardeum-validator-arm64:testnet-{your tag}
+```
+
+![image](https://github.com/user-attachments/assets/6804c453-f16e-46bd-b3f7-afdecbbd51e2)
+
+
