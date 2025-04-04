@@ -114,16 +114,10 @@ https://github.com/shardeum/shardeum-validator?tab=readme-ov-file#shardeum-valid
 The build script parses which branches to build through env variables, update these to the correct branch for the network:
 https://github.com/shardeum/shardeum-validator/blob/dev/build.sh
 
-In this example it will build the it4-1.16.1 branch of the validator, and main branches for the validator CLI and GUI:
+The example in `build.sh` will build the `mainnet-launch` branch of the validator, validator CLI and GUI:
 
 ```
-docker build . \
-    --push \
-    --no-cache \
-    --build-arg VALIDATOR_BRANCH=it4-1.16.1 \
-    --build-arg CLI_BRANCH=main \
-    --build-arg GUI_BRANCH=main \
-    -t ghcr.io/shardeum/shardeum-validator-${ARCH_TAG}:${TAG}
+ ./build.sh custom-my-tag
 ```
 
 ## Changing network settings
