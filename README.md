@@ -114,47 +114,37 @@ https://github.com/shardeum/shardeum-validator?tab=readme-ov-file#shardeum-valid
 The build script parses which branches to build through env variables, update these to the correct branch for the network:
 https://github.com/shardeum/shardeum-validator/blob/dev/build.sh
 
-In this example it will build the it4-1.16.1 branch of the validator, and main branches for the validator CLI and GUI:
+The example in `build.sh` will build the `mainnet-launch` branch of the validator, validator CLI and GUI:
 
 ```
-docker build . \
-    --push \
-    --no-cache \
-    --build-arg VALIDATOR_BRANCH=it4-1.16.1 \
-    --build-arg CLI_BRANCH=main \
-    --build-arg GUI_BRANCH=main \
-    -t ghcr.io/shardeum/shardeum-validator-${ARCH_TAG}:${TAG}
+ ./build.sh custom-my-tag
 ```
 
 ## Changing network settings
 
 
-The defaults used by the build are specified in the Dockerfile, this includes the archivers, explorer, rpc and monitor. Make sure to update these for the current network before building:
-https://github.com/shardeum/shardeum-validator/blob/dev/Dockerfile
+The defaults used by the build are specified in the `scripts/build-network.sh`, this includes the archivers, explorer, rpc and monitor. You can customize these in a custom build using `build.sh`. Make sure to update the default environment variables before building:
+https://github.com/shardeum/shardeum-validator/blob/dev/build.sh
 
 ```
-## Network details
-ARG APP_MONITOR="34.28.123.3"
-ARG RPC_SERVER_URL="http://34.42.232.167:8000 "
-ARG EXISTING_ARCHIVERS='[{"ip":"35.193.191.159","port":4000,"publicKey":"1c63734aedef5665d6cf02d3a79ae30aedcbd27eae3b76fff05d587a6ac62981"},{"ip":"34.73.94.45","port":4000,"publicKey":"11086314ccf8642906b99f09cf3ae9a13370c57106653cd28fc1a9eee2560b64"},{"ip":"34.19.93.147","port":4000,"publicKey":"b09a8792593682cbffbbf2fc3bd812d8143740197a5f435c77a38740397088ac"}]'
-ARG NEXT_PUBLIC_RPC_URL="http://34.42.232.167:8000 "
-ARG NEXT_PUBLIC_EXPLORER_URL="http://35.238.111.77:6001"
-ARG SHMEXT=9001
-ARG SHMINT=10001
-ARG DASHPORT=8080
-ARG RUNDASHBOARD="y"
-ARG INT_IP="auto"
-ARG LOCALLANIP="auto"
-ARG EXT_IP="auto"
-ARG SERVERIP="auto"
-
-## These should not be changed often or easily without thourough testing
-## 6 Gigabytes of memory for the node process for the validator to deal with the large amount of data it has to be able to handle
-ARG NODE_OPTIONS="--max-old-space-size=6144"
-ARG minNodes=1280
-ARG baselineNodes=1280
-ARG nodesPerConsensusGroup=128
-ARG maxNodes=1500
+# Required Environment Variables (values here are from testnet)
+CHAIN_ID=8083
+NEXT_PUBLIC_CHAIN_ID=${CHAIN_ID}
+APP_MONITOR="34.56.47.170"
+RPC_SERVER_URL="https://api-testnet.shardeum.org"
+EXISTING_ARCHIVERS='[{"ip":"104.197.117.164","port":4000,"publicKey":"d831bb7c09db45d47338af23ab50cac5d29ef8f3a2cd274dd741370aa472d6c1"},{"ip":"34.139.3.222","port":4000,"publicKey":"1c42a7f9cca36e13e590ae00c1124c5a1f696c879da210ffcdccb312d08c8214"},{"ip":"35.233.192.167","port":4000,"publicKey":"d1721c924394ae1ff3e9ea22af15962e045511fde05ed0b56f0a8c36eb161d75"}]'
+NEXT_PUBLIC_RPC_URL="https://api-testnet.shardeum.org"
+NEXT_PUBLIC_EXPLORER_URL="https://explorer-testnet.shardeum.org"
+minNodes=256
+baselineNodes=256
+nodesPerConsensusGroup=128
+maxNodes=1280
+enableProblematicNodeRemoval=true
+enableProblematicNodeRemovalOnCycle=0
+flexibleRotationDelta=4
+VALIDATOR_BRANCH=mainnet-launch
+CLI_BRANCH=mainnet-launch
+GUI_BRANCH=mainnet-launch
 ```
 
 ## Building
@@ -190,3 +180,33 @@ Once it's completed the latest build is available in https://github.com/shardeum
 ```
 docker pull ghcr.io/shardeum/shardeum-validator:latest
 ```
+
+
+### Github Actions building
+
+The github actions builds using `build-network.sh`. It can be configured ONLY for `testnet`, `stagenet`, and `mainnet`. If you want to make a custom network build you can use `build.sh` with your own environment variables. You can see them all enumerated in `build-network.sh`.
+
+#### Tagging Structure
+
+```
+ghcr.io/shardeum/shardeum-validator:{environment}-{your tag}
+```
+
+expanded: 
+```
+ghcr.io/shardeum/shardeum-validator:mainnet-{your tag}
+ghcr.io/shardeum/shardeum-validator-amd64:mainnet-{your tag}
+ghcr.io/shardeum/shardeum-validator-arm64:mainnet-{your tag}
+
+ghcr.io/shardeum/shardeum-validator:stagenet-{your tag}
+ghcr.io/shardeum/shardeum-validator-amd64:stagenet-{your tag}
+ghcr.io/shardeum/shardeum-validator-arm64:stagenet-{your tag}
+
+ghcr.io/shardeum/shardeum-validator:testnet-{your tag}
+ghcr.io/shardeum/shardeum-validator-amd64:testnet-{your tag}
+ghcr.io/shardeum/shardeum-validator-arm64:testnet-{your tag}
+```
+
+![image](https://github.com/user-attachments/assets/6804c453-f16e-46bd-b3f7-afdecbbd51e2)
+
+
