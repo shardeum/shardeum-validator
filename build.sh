@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Required Environment Variables (values here are from stagenet)
+# Required Environment Variables (values here are from testnet)
 CHAIN_ID=8083
 NEXT_PUBLIC_CHAIN_ID=${CHAIN_ID}
 APP_MONITOR="34.56.47.170"
