@@ -85,7 +85,7 @@ docker run \
 ## Running on other platforms
 The end user experience is kept as closely to the old installer as possible, The command looks similar but does has a different url. Make sure to use this new one:
 
-curl -O https://raw.githubusercontent.com/shardeum/shardeum-validator/refs/heads/dev/install.sh && chmod +x install.sh && ./install.sh
+curl -O https://raw.githubusercontent.com/shardeum/shardeum-validator/refs/heads/dev/install.sh && chmod +x install.sh && ./install.sh <optional_tag>
 
 Because the new build system is fully Docker based, the install.sh script is really only there to make it easier to enter ports and other preferences, however it's just as effective to run it directly as docker command, ie:
 
