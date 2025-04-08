@@ -6,7 +6,7 @@ export CLI_BRANCH="mainnet-launch"
 export GUI_BRANCH="mainnet-launch"
 
 # Network details
-export CHAIN_ID="8118"
+export CHAIN_ID="8082"
 export NEXT_PUBLIC_CHAIN_ID=$CHAIN_ID
 
 ## External Service Configuration
