@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# Check if a tag was specified as a command-line argument
+TAG=${1:-latest}
+echo "Using Docker image tag: $TAG"
+
 read -p "During this early stage of Betanet the Shardeum team will be collecting some performance and debugging info from your node to help improve future versions of the software.
 This is only temporary and will be discontinued as we get closer to mainnet.
 Thanks for running a node and helping to make Shardeum better.
@@ -296,7 +300,7 @@ set -e
 echo "Downloading the shardeum-validator image and starting the validator container"
 
 ## Pull the latest image and run the validator
-docker-safe pull ghcr.io/shardeum/shardeum-validator:latest 
+docker-safe pull ghcr.io/shardeum/shardeum-validator:${TAG} 
 docker-safe run \
     --name shardeum-validator \
     -p ${DASHPORT}:${DASHPORT} \
@@ -313,7 +317,7 @@ docker-safe run \
     -v ${NODEHOME}:/home/node/config \
     --restart=always \
     --detach \
-    ghcr.io/shardeum/shardeum-validator 1>/dev/null
+    ghcr.io/shardeum/shardeum-validator:${TAG} 1>/dev/null
 
 echo "Shardeum Validator starting."
 echo "Waiting for the container to be available (max 60 seconds).."
