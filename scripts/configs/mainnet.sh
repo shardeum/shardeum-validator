@@ -16,11 +16,7 @@ export EXISTING_ARCHIVERS='[{"ip":"35.238.248.68","port":4000,"publicKey":"e25aa
 export NEXT_PUBLIC_RPC_URL="http://35.238.62.173:8000"
 export NEXT_PUBLIC_EXPLORER_URL="http://34.72.93.203:6001"
 
-# Network parameters
-export minNodes=360
-export baselineNodes=360
-export nodesPerConsensusGroup=128
-export maxNodes=1280
-export enableProblematicNodeRemoval=true
-export enableProblematicNodeRemovalOnCycle=0
-export flexibleRotationDelta=4
+export LOAD_JSON_CONFIGS=/home/node/shardeum/environments/mainnet.config.json
+export LOAD_JSON_GENESIS_SECURE_ACCOUNTS=/home/node/shardeum/src/config/mainnet.genesis-secure-accounts.json
+export LOAD_JSON_MULTISIG_PERMISSION=/home/shardeum/src/config/mainnet.multisig-permissions.json
+export LOAD_JSON_GENESIS=/home/shardeum/src/config/mainnet.genesis.json

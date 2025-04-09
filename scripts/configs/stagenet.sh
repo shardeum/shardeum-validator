@@ -16,16 +16,6 @@ export EXISTING_ARCHIVERS='[{"ip":"34.57.177.170","port":4000,"publicKey":"d831b
 export NEXT_PUBLIC_RPC_URL="https://api-stagenet.shardeum.org"
 export NEXT_PUBLIC_EXPLORER_URL="https://explorer-stagenet.shardeum.org"
 
-# Network parameters
-export minNodes=360
-export baselineNodes=360
-export nodesPerConsensusGroup=128
-export maxNodes=1280
-export enableProblematicNodeRemoval=true
-export enableProblematicNodeRemovalOnCycle=0
-export flexibleRotationDelta=4
-
-# instead of
 export LOAD_JSON_CONFIGS=s/home/node/shardeum/environments/stagenet.config.json
 export LOAD_JSON_GENESIS_SECURE_ACCOUNTS=/home/node/shardeum/src/config/stagenet.genesis-secure-accounts.json
 export LOAD_JSON_MULTISIG_PERMISSION=/home/shardeum/src/config/stagenet.multisig-permissions.json
