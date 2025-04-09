@@ -24,3 +24,9 @@ export maxNodes=1280
 export enableProblematicNodeRemoval=true
 export enableProblematicNodeRemovalOnCycle=0
 export flexibleRotationDelta=4
+
+# instead of
+export LOAD_JSON_CONFIGS=s/home/node/shardeum/environments/stagenet.config.json
+export LOAD_JSON_GENESIS_SECURE_ACCOUNTS=/home/node/shardeum/src/config/stagenet.genesis-secure-accounts.json
+export LOAD_JSON_MULTISIG_PERMISSION=/home/shardeum/src/config/stagenet.multisig-permissions.json
+export LOAD_JSON_GENESIS=/home/shardeum/src/config/stagenet.genesis.json
