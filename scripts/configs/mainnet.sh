@@ -16,7 +16,7 @@ export EXISTING_ARCHIVERS='[{"ip":"35.238.248.68","port":4000,"publicKey":"e25aa
 export NEXT_PUBLIC_RPC_URL="http://35.238.62.173:8000"
 export NEXT_PUBLIC_EXPLORER_URL="http://34.72.93.203:6001"
 
-export LOAD_JSON_CONFIGS=../../../../../usr/src/app/environments/mainnet.config.json
+export LOAD_JSON_CONFIGS=/usr/src/app/environments/mainnet.config.json
 export LOAD_JSON_GENESIS_SECURE_ACCOUNTS=/config/mainnet.genesis-secure-accounts.json
 export LOAD_JSON_MULTISIG_PERMISSION=/config/mainnet.multisig-permissions.json
 export LOAD_JSON_GENESIS=/config/mainnet.genesis.json
