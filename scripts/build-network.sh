@@ -33,6 +33,13 @@ IMAGE_NAME="${REGISTRY}/shardeum/shardeum-validator-${ARCH_TAG}:${NETWORK_NAME}-
 
 echo "Building image: ${IMAGE_NAME} for network ${NETWORK_NAME}"
 
+echo "CHAIN_ID=${CHAIN_ID}"
+echo "NEXT_PUBLIC_CHAIN_ID=${NEXT_PUBLIC_CHAIN_ID}"
+echo "LOAD_JSON_CONFIGS=${LOAD_JSON_CONFIGS}"
+echo "LOAD_JSON_GENESIS_SECURE_ACCOUNTS=${LOAD_JSON_GENESIS_SECURE_ACCOUNTS}"
+echo "LOAD_JSON_MULTISIG_PERMISSION=${LOAD_JSON_MULTISIG_PERMISSION}"
+echo "LOAD_JSON_GENESIS=${LOAD_JSON_GENESIS}"
+
 # Execute the build command directly substituting shell variables
 docker build . \
     --no-cache \
@@ -47,13 +54,10 @@ docker build . \
     --build-arg EXISTING_ARCHIVERS="${EXISTING_ARCHIVERS}" \
     --build-arg NEXT_PUBLIC_RPC_URL="${NEXT_PUBLIC_RPC_URL}" \
     --build-arg NEXT_PUBLIC_EXPLORER_URL="${NEXT_PUBLIC_EXPLORER_URL}" \
-    --build-arg minNodes="${minNodes}" \
-    --build-arg baselineNodes="${baselineNodes}" \
-    --build-arg nodesPerConsensusGroup="${nodesPerConsensusGroup}" \
-    --build-arg maxNodes="${maxNodes}" \
-    --build-arg enableProblematicNodeRemoval="${enableProblematicNodeRemoval}" \
-    --build-arg enableProblematicNodeRemovalOnCycle="${enableProblematicNodeRemovalOnCycle}" \
-    --build-arg flexibleRotationDelta="${flexibleRotationDelta}" \
+    --build-arg LOAD_JSON_CONFIGS="${LOAD_JSON_CONFIGS}" \
+    --build-arg LOAD_JSON_GENESIS_SECURE_ACCOUNTS="${LOAD_JSON_GENESIS_SECURE_ACCOUNTS}" \
+    --build-arg LOAD_JSON_MULTISIG_PERMISSION="${LOAD_JSON_MULTISIG_PERMISSION}" \
+    --build-arg LOAD_JSON_GENESIS="${LOAD_JSON_GENESIS}" \
     -t "${IMAGE_NAME}"
 
 echo "Docker build completed for ${IMAGE_NAME}" 

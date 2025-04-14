@@ -16,11 +16,7 @@ export EXISTING_ARCHIVERS='[{"ip":"104.197.117.164","port":4000,"publicKey":"d83
 export NEXT_PUBLIC_RPC_URL="https://api-testnet.shardeum.org"
 export NEXT_PUBLIC_EXPLORER_URL="https://explorer-testnet.shardeum.org"
 
-# Network parameters
-export minNodes=256
-export baselineNodes=256
-export nodesPerConsensusGroup=128
-export maxNodes=1280
-export enableProblematicNodeRemoval=true
-export enableProblematicNodeRemovalOnCycle=0
-export flexibleRotationDelta=4
+export LOAD_JSON_CONFIGS=/usr/src/app/environments/testnet.config.json
+export LOAD_JSON_GENESIS_SECURE_ACCOUNTS=/config/testnet.genesis-secure-accounts.json
+export LOAD_JSON_MULTISIG_PERMISSION=/config/testnet.multisig-permissions.json
+export LOAD_JSON_GENESIS=/config/testnet.genesis.json
