@@ -59,6 +59,10 @@ ARG SERVERIP
 ARG NODE_OPTIONS
 ARG NEXT_PUBLIC_CHAIN_ID
 ARG CHAIN_ID
+ARG LOAD_JSON_CONFIGS
+ARG LOAD_JSON_GENESIS_SECURE_ACCOUNTS
+ARG LOAD_JSON_MULTISIG_PERMISSION
+ARG LOAD_JSON_GENESIS
 
 ## Inherit the ARGs from the to level and expose them in the final image
 ENV APP_MONITOR=$APP_MONITOR
@@ -77,6 +81,10 @@ ENV SERVERIP=$SERVERIP
 ENV NODE_OPTIONS=$NODE_OPTIONS
 ENV NEXT_PUBLIC_CHAIN_ID=$CHAIN_ID
 ENV CHAIN_ID=$CHAIN_ID
+ENV LOAD_JSON_CONFIGS=$LOAD_JSON_CONFIGS
+ENV LOAD_JSON_GENESIS_SECURE_ACCOUNTS=$LOAD_JSON_GENESIS_SECURE_ACCOUNTS
+ENV LOAD_JSON_MULTISIG_PERMISSION=$LOAD_JSON_MULTISIG_PERMISSION
+ENV LOAD_JSON_GENESIS=$LOAD_JSON_GENESIS
 
 # Install build dependencies
 RUN apt-get update && apt-get install -y \
@@ -258,6 +266,10 @@ ARG nodesPerConsensusGroup
 ARG maxNodes
 ARG NEXT_PUBLIC_CHAIN_ID
 ARG CHAIN_ID
+ARG LOAD_JSON_CONFIGS
+ARG LOAD_JSON_GENESIS_SECURE_ACCOUNTS
+ARG LOAD_JSON_MULTISIG_PERMISSION
+ARG LOAD_JSON_GENESIS
 
 ## Inherit the ARGs from the to level and expose them in the final image
 ENV APP_MONITOR=$APP_MONITOR
@@ -280,6 +292,10 @@ ENV nodesPerConsensusGroup=$nodesPerConsensusGroup
 ENV maxNodes=$maxNodes
 ENV NEXT_PUBLIC_CHAIN_ID=$CHAIN_ID
 ENV CHAIN_ID=$CHAIN_ID
+ENV LOAD_JSON_CONFIGS=$LOAD_JSON_CONFIGS
+ENV LOAD_JSON_GENESIS_SECURE_ACCOUNTS=$LOAD_JSON_GENESIS_SECURE_ACCOUNTS
+ENV LOAD_JSON_MULTISIG_PERMISSION=$LOAD_JSON_MULTISIG_PERMISSION
+ENV LOAD_JSON_GENESIS=$LOAD_JSON_GENESIS
 
 RUN apt-get update
 RUN apt-get install -y logrotate iproute2 nano git openssl curl procps && \
@@ -291,7 +307,9 @@ RUN mkdir -p           /home/node/app /home/node/config /usr/src/app && \
     chmod 2777 -R      /home/node/app /home/node/config /usr/src/app
 
 ## Shardeum Validator 
-# COPY --from=validator --chown=node:node /usr/src/app       /usr/src/app
+# Copy all necessary files from the validator stage
+COPY --from=validator --chown=node:node /usr/src/app/src/config ./config
+COPY --from=validator --chown=node:node /usr/src/app/environments /usr/src/app/environments
 COPY --from=validator --chown=node:node /usr/src/app/dist /usr/src/app/dist
 COPY --from=validator --chown=node:node /usr/src/app/node_modules /usr/src/app/node_modules
 COPY --from=validator --chown=node:node /usr/src/app/config.json /usr/src/app/config.json
@@ -341,7 +359,7 @@ RUN echo '/home/node/.pm2/logs/*.log /home/node/app/cli/build/logs/*.log {\n\
     postrotate\n\
     pm2 reloadLogs\n\
     endscript\n\
-}"' > /etc/logrotate.d/pm2
+}' > /etc/logrotate.d/pm2
 
 ## Link the env file to the various app directories so they're automatically loaded by the apps
 RUN ln -s /home/node/env /home/node/app/cli/build/.env

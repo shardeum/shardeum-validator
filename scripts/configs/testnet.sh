@@ -16,7 +16,7 @@ export EXISTING_ARCHIVERS='[{"ip":"104.197.117.164","port":4000,"publicKey":"d83
 export NEXT_PUBLIC_RPC_URL="https://api-testnet.shardeum.org"
 export NEXT_PUBLIC_EXPLORER_URL="https://explorer-testnet.shardeum.org"
 
-export LOAD_JSON_CONFIGS=/home/node/shardeum/environments/testnet.config.json
-export LOAD_JSON_GENESIS_SECURE_ACCOUNTS=/home/node/shardeum/src/config/testnet.genesis-secure-accounts.json
-export LOAD_JSON_MULTISIG_PERMISSION=/home/shardeum/src/config/testnet.multisig-permissions.json
-export LOAD_JSON_GENESIS=/home/shardeum/src/config/testnet.genesis.json
+export LOAD_JSON_CONFIGS=../../../../../usr/src/app/environments/testnet.config.json
+export LOAD_JSON_GENESIS_SECURE_ACCOUNTS=/config/testnet.genesis-secure-accounts.json
+export LOAD_JSON_MULTISIG_PERMISSION=/config/testnet.multisig-permissions.json
+export LOAD_JSON_GENESIS=/config/testnet.genesis.json
