@@ -95,10 +95,7 @@ while true; do
   fi
 done
 
-# Escape $ characters for docker command
-ESCAPED_DASHPASS=$(printf '%s' "$DASHPASS" | sed 's/\$/\\\$/g')
-
-docker-safe exec -it shardeum-validator operator-cli gui set password "$ESCAPED_DASHPASS"
+docker-safe exec -it shardeum-validator operator-cli gui set password "$DASHPASS"
 
 echo
 echo
