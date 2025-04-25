@@ -23,18 +23,12 @@ on:
         default: 'testnet'
       validator_branch:
         description: 'Validator branch to use'
-        required: true
-        default: 'mainnet-launch'
         type: string
       cli_branch:
         description: 'CLI branch to use'
-        required: true
-        default: 'mainnet-launch'
         type: string
       gui_branch:
         description: 'GUI branch to use'
-        required: true
-        default: 'mainnet-launch'
         type: string
       tag:
         description: 'Tag for the Docker images'
@@ -63,6 +57,19 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Override branch variables in config
+        run: |
+          CONFIG="scripts/configs/${{ inputs.network }}.sh"
+          if [ -n "${{ inputs.validator_branch }}" ]; then
+            sed -i 's/^export VALIDATOR_BRANCH=.*/export VALIDATOR_BRANCH="${{ inputs.validator_branch }}"/' "$CONFIG"
+          fi
+          if [ -n "${{ inputs.cli_branch }}" ]; then
+            sed -i 's/^export CLI_BRANCH=.*/export CLI_BRANCH="${{ inputs.cli_branch }}"/' "$CONFIG"
+          fi
+          if [ -n "${{ inputs.gui_branch }}" ]; then
+            sed -i 's/^export GUI_BRANCH=.*/export GUI_BRANCH="${{ inputs.gui_branch }}"/' "$CONFIG"
+          fi
 
       - name: Build Docker image using script
         run: |
