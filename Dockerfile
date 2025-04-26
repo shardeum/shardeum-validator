@@ -60,9 +60,9 @@ ARG NODE_OPTIONS
 ARG NEXT_PUBLIC_CHAIN_ID
 ARG CHAIN_ID
 ARG LOAD_JSON_CONFIGS
-ARG LOAD_JSON_GENESIS_SECURE_ACCOUNTS
-ARG LOAD_JSON_MULTISIG_PERMISSION
-ARG LOAD_JSON_GENESIS
+# ARG LOAD_JSON_GENESIS_SECURE_ACCOUNTS
+# ARG LOAD_JSON_MULTISIG_PERMISSION
+# ARG LOAD_JSON_GENESIS
 
 ## Inherit the ARGs from the to level and expose them in the final image
 ENV APP_MONITOR=$APP_MONITOR
@@ -82,9 +82,9 @@ ENV NODE_OPTIONS=$NODE_OPTIONS
 ENV NEXT_PUBLIC_CHAIN_ID=$CHAIN_ID
 ENV CHAIN_ID=$CHAIN_ID
 ENV LOAD_JSON_CONFIGS=$LOAD_JSON_CONFIGS
-ENV LOAD_JSON_GENESIS_SECURE_ACCOUNTS=$LOAD_JSON_GENESIS_SECURE_ACCOUNTS
-ENV LOAD_JSON_MULTISIG_PERMISSION=$LOAD_JSON_MULTISIG_PERMISSION
-ENV LOAD_JSON_GENESIS=$LOAD_JSON_GENESIS
+# ENV LOAD_JSON_GENESIS_SECURE_ACCOUNTS=$LOAD_JSON_GENESIS_SECURE_ACCOUNTS
+# ENV LOAD_JSON_MULTISIG_PERMISSION=$LOAD_JSON_MULTISIG_PERMISSION
+# ENV LOAD_JSON_GENESIS=$LOAD_JSON_GENESIS
 
 # Install build dependencies
 RUN apt-get update && apt-get install -y \
@@ -267,9 +267,9 @@ ARG maxNodes
 ARG NEXT_PUBLIC_CHAIN_ID
 ARG CHAIN_ID
 ARG LOAD_JSON_CONFIGS
-ARG LOAD_JSON_GENESIS_SECURE_ACCOUNTS
-ARG LOAD_JSON_MULTISIG_PERMISSION
-ARG LOAD_JSON_GENESIS
+# ARG LOAD_JSON_GENESIS_SECURE_ACCOUNTS
+# ARG LOAD_JSON_MULTISIG_PERMISSION
+# ARG LOAD_JSON_GENESIS
 
 ## Inherit the ARGs from the to level and expose them in the final image
 ENV APP_MONITOR=$APP_MONITOR
@@ -293,9 +293,9 @@ ENV maxNodes=$maxNodes
 ENV NEXT_PUBLIC_CHAIN_ID=$CHAIN_ID
 ENV CHAIN_ID=$CHAIN_ID
 ENV LOAD_JSON_CONFIGS=$LOAD_JSON_CONFIGS
-ENV LOAD_JSON_GENESIS_SECURE_ACCOUNTS=$LOAD_JSON_GENESIS_SECURE_ACCOUNTS
-ENV LOAD_JSON_MULTISIG_PERMISSION=$LOAD_JSON_MULTISIG_PERMISSION
-ENV LOAD_JSON_GENESIS=$LOAD_JSON_GENESIS
+# ENV LOAD_JSON_GENESIS_SECURE_ACCOUNTS=$LOAD_JSON_GENESIS_SECURE_ACCOUNTS
+# ENV LOAD_JSON_MULTISIG_PERMISSION=$LOAD_JSON_MULTISIG_PERMISSION
+# ENV LOAD_JSON_GENESIS=$LOAD_JSON_GENESIS
 
 RUN apt-get update
 RUN apt-get install -y logrotate iproute2 nano git openssl curl procps && \
@@ -309,7 +309,7 @@ RUN mkdir -p           /home/node/app /home/node/config /usr/src/app && \
 ## Shardeum Validator 
 # Copy all necessary files from the validator stage
 COPY --from=validator --chown=node:node /usr/src/app/src/config ./config
-COPY --from=validator --chown=node:node /usr/src/app/environments /usr/src/app/environments
+# COPY --from=validator --chown=node:node /usr/src/app/environments /usr/src/app/environments
 COPY --from=validator --chown=node:node /usr/src/app/dist /usr/src/app/dist
 COPY --from=validator --chown=node:node /usr/src/app/node_modules /usr/src/app/node_modules
 COPY --from=validator --chown=node:node /usr/src/app/config.json /usr/src/app/config.json
