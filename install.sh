@@ -4,11 +4,10 @@
 TAG=${1:-latest}
 echo "Using Docker image tag: $TAG"
 
-read -p "During this early stage of Betanet the Shardeum team will be collecting some performance and debugging info from your node to help improve future versions of the software.
-This is only temporary and will be discontinued as we get closer to mainnet.
-Thanks for running a node and helping to make Shardeum better.
+read -p "By participating in the network your node can be selected at random for a duration to validate transactions, and earn SHM by doing so.
 
-By running this installer, you agree to allow the Shardeum team to collect this data. (Y/n)?: " WARNING_AGREE
+If your node is too slow to validate, it risks being removed from the active list reducing or entirely eliminating earnings, 
+so we recommend making sure your VPS meets the minimum specifications and runs with a non-budget hosting company" WARNING_AGREE
 
 set -e
 USE_SUDO=0
