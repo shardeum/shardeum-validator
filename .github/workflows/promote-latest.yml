@@ -42,6 +42,6 @@ jobs:
       - name: Tag and push latest manifest
         run: |
           docker manifest create ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest \
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-amd64:${{ inputs.tag }} \
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-arm64:${{ inputs.tag }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-amd64:latest \
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-arm64:latest
           docker manifest push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest 
