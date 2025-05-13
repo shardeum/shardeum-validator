@@ -27,6 +27,18 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Tag and push amd64 image as latest
+        run: |
+          docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-amd64:${{ inputs.tag }}
+          docker tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-amd64:${{ inputs.tag }} ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-amd64:latest
+          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-amd64:latest
+
+      - name: Tag and push arm64 image as latest
+        run: |
+          docker pull ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-arm64:${{ inputs.tag }}
+          docker tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-arm64:${{ inputs.tag }} ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-arm64:latest
+          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-arm64:latest
+
       - name: Tag and push latest manifest
         run: |
           docker manifest create ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest \
