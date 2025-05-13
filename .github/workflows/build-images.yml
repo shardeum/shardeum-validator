@@ -35,7 +35,7 @@ on:
         required: true
         type: string
       push_latest:
-        description: 'Push latest tag'
+        description: 'Push latest tag (DONT DO THIS UNLESS YOU KNOW WHAT YOU ARE DOING)'
         type: boolean
         required: true
         default: false
