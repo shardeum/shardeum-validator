@@ -39,9 +39,63 @@ jobs:
           docker tag ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-arm64:${{ inputs.tag }} ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-arm64:latest
           docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-arm64:latest
 
-      - name: Tag and push latest manifest
+      - name: Create and push latest manifest and capture digest
+        id: push_manifest
         run: |
           docker manifest create ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest \
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-amd64:latest \
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-arm64:latest
-          docker manifest push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest 
+          
+          # The docker manifest push command outputs the digest directly to stdout
+          # e.g., sha256:0123456789abcdef...
+          MANIFEST_DIGEST=$(docker manifest push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest)
+          echo "Pushed manifest digest: $MANIFEST_DIGEST" # Log for verification during workflow run
+          echo "digest=$MANIFEST_DIGEST" >> $GITHUB_OUTPUT
+
+      - name: Send Slack notification on success
+        if: success() # Only run this step if previous steps succeed
+        uses: slackapi/slack-github-action@v1.26.0
+        with:
+          payload: |
+            {
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": ":rocket: New Image Promoted to Latest"
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Repository:*\n`${{ github.repository }}`"
+                    },
+                    {
+                      "type": "mrkdwn",
+                      "text": "*Input Tag:*\n`${{ inputs.tag }}`"
+                    }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*New Manifest Digest:*\n`${{ steps.push_manifest.outputs.digest }}`"
+                  }
+                },
+                {
+                  "type": "context",
+                  "elements": [
+                    {
+                        "type": "mrkdwn",
+                        "text": "Triggered by `${{ github.actor }}`. See run: <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Workflow Run>"
+                    }
+                  ]
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # IMPORTANT: Ensure this secret is configured in your repository settings. 

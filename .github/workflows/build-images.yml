@@ -104,7 +104,8 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
           
-      - name: Create and push manifest per network
+      - name: Create and push manifest per network and capture digest
+        id: push_network_manifest
         run: |
           MANIFEST_NAME="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ inputs.network }}-${{ inputs.tag }}"
           IMG_AMD64="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-amd64:${{ inputs.network }}-${{ inputs.tag }}"
@@ -114,10 +115,60 @@ jobs:
             "$IMG_AMD64" \
             "$IMG_ARM64"
           echo "Pushing manifest: $MANIFEST_NAME"
-          docker manifest push "$MANIFEST_NAME"
+          MANIFEST_DIGEST=$(docker manifest push "$MANIFEST_NAME")
+          echo "Pushed manifest digest for ${MANIFEST_NAME}: $MANIFEST_DIGEST"
+          echo "digest=$MANIFEST_DIGEST" >> $GITHUB_OUTPUT
+          
           if [ "${{ github.event_name }}" == "workflow_dispatch" ] && [ "${{ inputs.push_latest }}" == "true" ]; then
+            echo "Creating and pushing latest manifest as push_latest is true"
             docker manifest create ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest \
               ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-amd64:latest \
               ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-arm64:latest
             docker manifest push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
           fi 
+
+      - name: Send Slack notification for image build
+        if: success() # Only run this step if previous steps succeed
+        uses: slackapi/slack-github-action@v1.26.0
+        with:
+          payload: |
+            {
+              "blocks": [
+                {
+                  "type": "header",
+                  "text": {
+                    "type": "plain_text",
+                    "text": ":hammer_and_wrench: New Image Build Completed"
+                  }
+                },
+                {
+                  "type": "section",
+                  "fields": [
+                    { "type": "mrkdwn", "text": "*Repository:*\n`${{ github.repository }}`" },
+                    { "type": "mrkdwn", "text": "*Network:*\n`${{ inputs.network }}`" },
+                    { "type": "mrkdwn", "text": "*Tag:*\n`${{ inputs.tag }}`" },
+                    { "type": "mrkdwn", "text": "*Validator Branch:*\n`${{ inputs.validator_branch }}`" },
+                    { "type": "mrkdwn", "text": "*CLI Branch:*\n`${{ inputs.cli_branch }}`" },
+                    { "type": "mrkdwn", "text": "*GUI Branch:*\n`${{ inputs.gui_branch }}`" }
+                  ]
+                },
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": "*Manifest Digest (${{ inputs.network }}-${{ inputs.tag }}):*\n`${{ steps.push_network_manifest.outputs.digest }}`"
+                  }
+                },
+                {
+                  "type": "context",
+                  "elements": [
+                    {
+                      "type": "mrkdwn",
+                      "text": "Triggered by `${{ github.actor }}`. See run: <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Workflow Run>"
+                    }
+                  ]
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # IMPORTANT: Ensure this secret is configured
