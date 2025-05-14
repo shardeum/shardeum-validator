@@ -54,48 +54,38 @@ jobs:
 
       - name: Send Slack notification on success
         if: success() # Only run this step if previous steps succeed
-        uses: slackapi/slack-github-action@v1.26.0
+        uses: slackapi/slack-github-action@v2.1.0
         with:
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
           payload: |
-            {
-              "blocks": [
-                {
-                  "type": "header",
-                  "text": {
-                    "type": "plain_text",
-                    "text": ":rocket: New Image Promoted to Latest"
-                  }
-                },
-                {
-                  "type": "section",
-                  "fields": [
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Repository:*\n`${{ github.repository }}`"
-                    },
-                    {
-                      "type": "mrkdwn",
-                      "text": "*Input Tag:*\n`${{ inputs.tag }}`"
-                    }
-                  ]
-                },
-                {
-                  "type": "section",
-                  "text": {
-                    "type": "mrkdwn",
-                    "text": "*New Manifest Digest:*\n`${{ steps.push_manifest.outputs.digest }}`"
-                  }
-                },
-                {
-                  "type": "context",
-                  "elements": [
-                    {
-                        "type": "mrkdwn",
-                        "text": "Triggered by `${{ github.actor }}`. See run: <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Workflow Run>"
-                    }
-                  ]
-                }
-              ]
-            }
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }} # IMPORTANT: Ensure this secret is configured in your repository settings. 
+            text: |
+              *:rocket: New Image Promoted to Latest*
+              Repository: `${{ github.repository }}`
+              Input Tag: `${{ inputs.tag }}`
+              Full Tag: `latest`
+              Image URL: `${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest`
+              Manifest Digest: `${{ steps.push_manifest.outputs.digest }}`
+              Triggered by: `${{ github.actor }}`
+              <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Workflow Run>
+            blocks:
+              - type: header
+                text:
+                  type: plain_text
+                  text: ":rocket: New Image Promoted to Latest"
+              - type: section
+                fields:
+                  - type: mrkdwn
+                    text: "*Repository:* `${{ github.repository }}`"
+                  - type: mrkdwn
+                    text: "*Input Tag:* `${{ inputs.tag }}`"
+                  - type: mrkdwn
+                    text: "*Full Tag:* `latest`"
+                  - type: mrkdwn
+                    text: "*Image URL:* `${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest`"
+                  - type: mrkdwn
+                    text: "*Manifest Digest:* `${{ steps.push_manifest.outputs.digest }}`"
+              - type: context
+                elements:
+                  - type: mrkdwn
+                    text: "Triggered by `${{ github.actor }}`. <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Workflow Run>" 
