@@ -34,11 +34,6 @@ on:
         description: 'Tag for the Docker images'
         required: true
         type: string
-      push_latest:
-        description: 'Push latest tag (DONT DO THIS UNLESS YOU KNOW WHAT YOU ARE DOING)'
-        type: boolean
-        required: true
-        default: false
 
 jobs:
   build:
@@ -85,11 +80,6 @@ jobs:
           IMAGE_NAME_FULL="${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-${{ matrix.arch }}:${{ inputs.network }}-${{ inputs.tag }}"
           echo "Pushing: $IMAGE_NAME_FULL"
           docker push "$IMAGE_NAME_FULL"
-          if [ "${{ github.event_name }}" == "workflow_dispatch" ] && [ "${{ inputs.push_latest }}" == "true" ]; then
-            docker tag "$IMAGE_NAME_FULL" ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-${{ matrix.arch }}:latest
-            docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-${{ matrix.arch }}:latest
-            docker rmi ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-${{ matrix.arch }}:latest
-          fi
           echo "Removing: $IMAGE_NAME_FULL"
           docker rmi "$IMAGE_NAME_FULL"
           
@@ -119,13 +109,6 @@ jobs:
           echo "Pushed manifest digest for ${MANIFEST_NAME}: $MANIFEST_DIGEST"
           echo "digest=$MANIFEST_DIGEST" >> $GITHUB_OUTPUT
           
-          if [ "${{ github.event_name }}" == "workflow_dispatch" ] && [ "${{ inputs.push_latest }}" == "true" ]; then
-            echo "Creating and pushing latest manifest as push_latest is true"
-            docker manifest create ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest \
-              ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-amd64:latest \
-              ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-arm64:latest
-            docker manifest push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-          fi 
 
       - name: Send Slack notification for image build
         if: success() # Only run this step if previous steps succeed
