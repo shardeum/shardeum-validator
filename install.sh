@@ -301,7 +301,16 @@ set -e
 echo "Downloading the shardeum-validator image and starting the validator container"
 
 ## Pull the latest image and run the validator
-docker-safe pull ghcr.io/shardeum/shardeum-validator:${TAG} 
+docker-safe pull ghcr.io/shardeum/shardeum-validator:${TAG}
+
+IMAGE_DIGEST=$(docker-safe inspect --format='{{index .RepoDigests 0}}' "ghcr.io/shardeum/shardeum-validator:${TAG}" | cut -d'@' -f2)
+
+if [ -z "$IMAGE_DIGEST" ]; then
+  echo "Failed to retrieve image digest. Exiting."
+  exit 1
+fi
+
+echo "Image digest: $IMAGE_DIGEST"
 docker-safe run \
     --name shardeum-validator \
     -p ${DASHPORT}:${DASHPORT} \
@@ -315,6 +324,8 @@ docker-safe run \
     -e LOCALLANIP=${LOCALLANIP} \
     -e SHMEXT=${SHMEXT} \
     -e SHMINT=${SHMINT} \
+    -e IMAGE_DIGEST="$IMAGE_DIGEST" \
+    -e IMAGE_NAME="shardeum/shardeum-validator" \
     -v ${NODEHOME}:/home/node/config \
     --restart=always \
     --detach \
