@@ -20,6 +20,7 @@ on:
           - mainnet
           - stagenet
           - testnet
+          - devnet-us
         default: 'testnet'
       validator_branch:
         description: 'Validator branch to use'
