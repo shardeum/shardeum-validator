@@ -32,7 +32,7 @@ on:
         description: 'GUI branch to use'
         type: string
       tag:
-        description: 'Tag for the Docker images'
+        description: 'Tag for the Docker images (will be combined with network name)'
         required: true
         type: string
 
@@ -106,10 +106,7 @@ jobs:
             "$IMG_AMD64" \
             "$IMG_ARM64"
           echo "Pushing manifest: $MANIFEST_NAME"
-          MANIFEST_DIGEST=$(docker manifest push "$MANIFEST_NAME")
-          echo "Pushed manifest digest for ${MANIFEST_NAME}: $MANIFEST_DIGEST"
-          echo "digest=$MANIFEST_DIGEST" >> $GITHUB_OUTPUT
-          
+          docker manifest push "$MANIFEST_NAME"
 
       - name: Send Slack notification for image build
         if: success() # Only run this step if previous steps succeed
@@ -128,7 +125,6 @@ jobs:
               Validator Branch: `${{ inputs.validator_branch }}`
               CLI Branch: `${{ inputs.cli_branch }}`
               GUI Branch: `${{ inputs.gui_branch }}`
-              Manifest Digest: `${{ steps.push_network_manifest.outputs.digest }}`
               Triggered by: `${{ github.actor }}`
               <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Workflow Run>
             blocks:
@@ -154,10 +150,6 @@ jobs:
                     text: "*CLI Branch:* `${{ inputs.cli_branch }}`"
                   - type: mrkdwn
                     text: "*GUI Branch:* `${{ inputs.gui_branch }}`"
-              - type: section
-                text:
-                  type: mrkdwn
-                  text: "*Manifest Digest (${{ inputs.network }}-${{ inputs.tag }}):* `${{ steps.push_network_manifest.outputs.digest }}`"
               - type: context
                 elements:
                   - type: mrkdwn
