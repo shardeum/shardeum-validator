@@ -33,7 +33,7 @@ ARG nodesPerConsensusGroup
 ARG maxNodes
 
 ## Define what Docker Node version image to use for the build & final image
-ARG NODE_VERSION=18.19.1
+ARG NODE_VERSION=20.19.3
 
 ###################################################################################
 ### Build the Shardeum Validator image from https://github.com/shardeum/shardeum
@@ -101,7 +101,7 @@ WORKDIR /home/node
 RUN curl https://sh.rustup.rs -sSf | bash -s -- -y
 RUN . /home/node/.cargo/env
 ENV PATH="/home/node/.cargo/bin:${PATH}"
-RUN rustup install 1.74.1 && rustup default 1.74.1
+RUN rustup install 1.85.1 && rustup default 1.85.1
 ENV NPM_CONFIG_loglevel=error
 
 WORKDIR /usr/src/app

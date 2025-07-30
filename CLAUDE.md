@@ -41,7 +41,7 @@ docker run --name shardeum-node -p 8080:8080 -p 9001:9001 -p 10001:10001 ghcr.io
 ## Architecture
 
 The project uses a multi-stage Docker build:
-1. **validator-build**: Builds the core validator from source (Node.js 18.19.1, Rust 1.74.1)
+1. **validator-build**: Builds the core validator from source (Node.js 20.19.3, Rust 1.85.1)
 2. **cli-build**: Builds the validator CLI
 3. **gui-build**: Builds the web dashboard
 4. **runtime**: Final slim image combining all components
