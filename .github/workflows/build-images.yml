@@ -13,7 +13,7 @@ on:
   workflow_dispatch:
     inputs:
       network:
-        description: 'Network to build for'
+        description: "Network to build for"
         required: true
         type: choice
         options:
@@ -21,18 +21,19 @@ on:
           - stagenet
           - testnet
           - devnet-us
-        default: 'testnet'
+          - unstablenet
+        default: "testnet"
       validator_branch:
-        description: 'Validator branch to use'
+        description: "Validator branch to use"
         type: string
       cli_branch:
-        description: 'CLI branch to use'
+        description: "CLI branch to use"
         type: string
       gui_branch:
-        description: 'GUI branch to use'
+        description: "GUI branch to use"
         type: string
       tag:
-        description: 'Tag for the Docker images (will be combined with network name)'
+        description: "Tag for the Docker images (will be combined with network name)"
         required: true
         type: string
 
@@ -47,10 +48,10 @@ jobs:
           - arch: arm64
             runner: [self-hosted, Linux, ARM64]
     runs-on: ${{ matrix.runner }}
-    
+
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
         with:
@@ -83,7 +84,7 @@ jobs:
           docker push "$IMAGE_NAME_FULL"
           echo "Removing: $IMAGE_NAME_FULL"
           docker rmi "$IMAGE_NAME_FULL"
-          
+
   create-manifest:
     needs: build
     runs-on: ubuntu-latest
@@ -94,7 +95,7 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-          
+
       - name: Create and push manifest per network and capture digest
         id: push_network_manifest
         run: |
