@@ -20,6 +20,3 @@ export LOAD_JSON_CONFIGS=/usr/src/app/environments/testnet.config.json
 export LOAD_JSON_GENESIS_SECURE_ACCOUNTS=/config/testnet.genesis-secure-accounts.json
 export LOAD_JSON_MULTISIG_PERMISSION=/config/testnet.multisig-permissions.json
 export LOAD_JSON_GENESIS=/config/testnet.genesis.json
-
-
-
